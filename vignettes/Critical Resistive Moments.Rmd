@@ -2,11 +2,11 @@
 title: "Critical Resistive Moments"
 author: "Locatelli, T. Hale, S. Nicoll, B. Gardiner, B."
 date: "`r Sys.Date()`"
-output: rmarkdown::github_document
-#vignette: >
-#  %\VignetteIndexEntry{Critical moments}
-#  %\VignetteEngine{knitr::rmarkdown}
-#  %\VignetteEncoding{UTF-8}
+output: html_vignette
+vignette: >
+  %\VignetteIndexEntry{Critical moments}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include = FALSE}
