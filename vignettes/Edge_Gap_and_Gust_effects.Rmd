@@ -2,7 +2,7 @@
 title: "Edge, Gap, and Gust effects"
 author: "Locatelli, T. Hale, S. Nicoll, B. Gardiner, B."
 date: "`r Sys.Date()`"
-output: rmarkdown::pdf_document
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}

@@ -2,7 +2,7 @@
 title: "Critical Wind Speeds"
 author: "Locatelli, T. Hale, S. Nicoll, B. Gardiner, B."
 date: "`r Sys.Date()`"
-output: rmarkdown::pdf_document
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Critical Wind Speeds}
   %\VignetteEngine{knitr::rmarkdown}

@@ -2,7 +2,7 @@
 title: "Turning coefficients functions"
 author: "Locatelli, T. Hale, S. Nicoll, B. Gardiner, B."
 date: "`r Sys.Date()`"
-output: rmarkdown::pdf_document
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Turning coefficients functions}
   %\VignetteEngine{knitr::rmarkdown}
