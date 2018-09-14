@@ -12,7 +12,7 @@ Authors@R: c(person("Tom", "Locatelli", role = c("cre", "aut"),
               person("Bruce", "Nicoll", role = c("aut", "cre"),
                      email = "bruce.nicoll@forestry.gsi.gov.uk"),
               person("Forest", "Research", role = "cph",
-                     email = "forestgales.support@forestry.gsi.gov.uk")       
+                     email = "forestgales.support@forestry.gsi.gov.uk"))       
 Author: Barry Gardiner[aut, cre],
         Sophie Hale [aut, cre],
         Bruce Nicoll[aut, cre],
