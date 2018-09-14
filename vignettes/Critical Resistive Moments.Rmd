@@ -23,12 +23,6 @@ The resistance of a tree to stem breakage is based on the assumption that the wi
 Following Jones (1983), the critical breaking moment is calculated as:
 
 $$M_{crit\_break} = \frac{\pi}{32}f_{knot}MOR\cdot dbh^3\tag{Eq. 1}$$
-\begin{align}
-
-M_{crit\_break} = \frac{\pi}{32}f_{knot}MOR\cdot dbh^3
-
-\end{align}
-
 where $M_{crit\_break}$ is expressed in N m, dbh (m) is the stem diameter at breast height, and $f_{knot}$ is a factor to account for the presence of knots that reduces the MOR from the values obtained for knot-free samples (as in e.g. Lavers, 1969). The value of $f_{knot}$ is scaled $(0,\ 1]$ and is species-specific.
 
 ## Resistance to overturning
