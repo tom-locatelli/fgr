@@ -38,6 +38,8 @@ BM_{max}(z) = F_{Wind} \cdot z + F_{Tree} \cdot x(z)
 \end{align}
 Where z is the height along the tree (m) and x(z) is the horizontal displacement (m) of the tree under the wind loading. The horizontal displacement is assumed proportional and inversely proportional, respectively, to the force of the wind and the stiffness of the stem (Peltola and Kellomaki, 1993). The stiffness of the stem is defined as the product of the Modulus of Elasticity of stem wood by the second moment of area of the cross section of the stem (i.e. EI), calculated from the stem diameter (Wood, 1995). The stem and the root-soil plate provide resistance to breakage and overturning, respectively. These resistive moments are the result of stem stiffness, wood strength, weight of the root-soil plate, structural strength of the roots, and the soil shear strength. Figure 1, from Peltola (2006), provides a diagrammatical representation of these forces.
 
+![Figure 1: Applied and resistive forces on a tree subject to strong winds (from Peltola, 2006)](Peltola_2006.png)
+
 ```{r pressure, echo=FALSE, fig.cap="Figure 1: Applied and resistive forces on a tree subject to strong winds (from Peltola, 2006)", out.width = '100%'}
 knitr::include_graphics("Peltola_2006.png")
 ```
