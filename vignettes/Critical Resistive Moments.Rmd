@@ -63,6 +63,8 @@ From the initial FC dataset, for each species the data were used to calculate re
 M_{crit\_over} = C_{reg}SW
 \end{align}
 
+![equation](http://www.sciweavers.org/tex2img.php?eq=%5Cbegin%7Balign%7D%0AM_%7Bcrit%5C_over%7D%20%3D%20C_%7Breg%7DSW%0A%5Cend%7Balign%7D&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0)
+
 where $C_{reg}$ (N m kg-1) is the regression coefficient, specific to species, soil type, and rooting depth (classified as shallow (< 80cm) and deep (> 80cm)). The regressions are forced through zero because as the tree stem weight approaches zero, so will the uprooting moment. When combinations of species and soil/rooting depth lack sufficient data for a robust linear regression analysis, best estimates of $C_{reg}$ are made based on the data from other species.
 
 The soil classification adopted in ForestGALES is based on UK soil classification (Kennedy, 2002):
