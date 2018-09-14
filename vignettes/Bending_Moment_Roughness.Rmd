@@ -13,7 +13,12 @@ vignette: >
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(collapse = TRUE,comment = "#>")
 ```
-\(\epsilon\)
+
+\begin{equation}
+  f\left(k\right) = \binom{n}{k} p^k\left(1-p\right)^{n-k}
+  (\#eq:binom)
+\end{equation}
+
 The roughness method in ForestGALES^[Throughout the package documentation, we will use the name *ForestGALES* to refer to the model characteristics as described in e.g. Hale et al. (2015) or Gardiner et al. (2000, 2008). Conversely, when we refer to the functionalities implemented in this package, we use the name *fgr*] is based on the the drag per unit area imposed on the canopy surface by the wind. The wind's shear stress ($\tau$ (N m-2) on the canopy surface is calculated as:
 
 $\tau = - \rho u_{*}^2\tag{Eq.1}$
