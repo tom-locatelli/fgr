@@ -2,7 +2,7 @@
 title: "Critical Resistive Moments"
 author: "Locatelli, T. Hale, S. Nicoll, B. Gardiner, B."
 date: "`r Sys.Date()`"
-output: output:
+output:
   github_document:
     pandoc_args: --webtex
 vignette: >
