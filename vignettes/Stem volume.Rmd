@@ -1,0 +1,56 @@
+---
+title: "Stem volume functions"
+author: "Locatelli, T. Hale, S. Nicoll, B. Gardiner, B."
+date: "`r Sys.Date()`"
+output: rmarkdown::pdf_document
+vignette: >
+  %\VignetteIndexEntry{Stem volume}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+Estimating the mass of the stem is required in ForestGALES^[Throughout the package documentation, we will use the name *ForestGALES* to refer to the model characteristics as described in e.g. Hale et al. (2015) or Gardiner et al. (2000, 2008). Conversely, when we refer to the functionalities implemented in this package, we use the name *fgr*] to calculate the resistance to overturning (in the `critical_moment_overturning` function) and the additional moment provided by the stem mass as the tree deviates from its vertical position under the force of the wind and that of its own weight and of snow when applicable, as calculated in the `DLF_calc` function. 
+Stem mass is calculated by simply multiplying the volume of the stem by the species-specific green wood density stored in the package *Internal Data*.
+
+Unless stem volume is provided by the user as one of the additional inputs to the main functions `fg_tmc` and `fg_rou`, *fgr* selects one of four methods for stem volume calculation based on the selected tree species. This is done with a "switch" function (`stem_vol_fun`). 
+
+The volume calculation methods are as follows:
+
+- That of Fonweban et al. (2012) (Eq. 4)
+- That of Honer (1967) for those species whose resistance to overturning was measured in Canada, as provided by JC Ruel of Laval University in Quebec, Canada
+- That of Laasasenaho (1982) for species whose resistance to overturning was tested in Finland
+- That for Japanese Larch grown in Japan, provided by K Kamimura of Shinshu University in Japan
+
+Apart from the latter method, which is only applied to Japanese Larch grown in Japan, the above methods are applied to the following species:
+
+| Fonweban           | Honer       | Laasasenaho | Japanese data               |
+|:------------------:|:-----------:|:-----------:|:---------------------------:|
+|Scots pine          |White spruce |Birch        |Japanese Larch (Japan grown) |
+|Sitka spruce        |Black spruce |             |                             |
+|Norway spruce       |Black fir    |             |                             |
+|Corsican pine       |Jack pine    |             |                             |
+|Lodgepole pine      |             |             |                             |
+|European larch      |             |             |                             |
+|Hybrid larch        |             |             |                             |
+|Douglas fir         |             |             |                             |
+|Japanese larch      |             |             |                             |
+|Noble fir           |             |             |                             |
+|Grand fir           |             |             |                             |
+|Western hemlock     |             |             |                             |
+|Beech               |             |             |                             |
+|Common oak          |             |             |                             |
+|Maritime pine       |             |             |                             |
+|Radiata pine        |             |             |                             |
+|Eucalyptus globulus |             |             |                             |
+
+
+## Bibliography
+- Fonweban, J., Gardiner, B. and Auty, D., 2012. Variable-top merchantable volume equations for Scots pine (Pinus sylvestris) and Sitka spruce (Picea sitchensis (Bong.) Carr.) in Northern Britain. Forestry, 85(2), pp.237-253.
+- Honer, T.G., 1967. Standard volume tables and merchantable conversion factors for the commercial tree species of central and eastern Canada (No. 634.9285 H6).
+- Laasasenaho, J., 1982. Taper curve and volume functions for pine, spruce and birch. Metsäntutkimuslaitos.

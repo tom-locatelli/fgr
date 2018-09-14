@@ -1,0 +1,97 @@
+---
+title: "Critical Resistive Moments"
+author: "Locatelli, T. Hale, S. Nicoll, B. Gardiner, B."
+date: "`r Sys.Date()`"
+output: rmarkdown::pdf_document
+vignette: >
+  %\VignetteIndexEntry{Critical moments}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+ForestGALES^[Throughout the package documentation, we will use the name *ForestGALES* to refer to the model characteristics as described in e.g. Hale et al. (2015) or Gardiner et al. (2000, 2008). Conversely, when we refer to the functionalities implemented in this package, we use the name *fgr*] calculates the critical wind speeds of damage (for stem breakage and tree uprooting) by comparing them with the respective critical resistive moments. The critical breaking moment is calculated from engineering principles, while the critical overturning moment is derived from experimental data.
+
+## Resistance to breakage
+
+The resistance of a tree to stem breakage is based on the assumption that the wind-induced stress in the outer fibres of the tree stem remains constant between the base of the canopy and the stem base (Morgan and Cannell, 1994). This assumption simplifies the calculations as the stress only needs to be calculated e.g. at breast height (1.3 m). When this stress exceeds the species-specific modulus of rupture of green wood (MOR, Pa) the stem will break. MOR can be obtained from the literature, or experimentally derived from mechanical testing of small wood clears using e.g. a bench-top 3-point bending machine.
+Following Jones (1983), the critical breaking moment is calculated as:
+\begin{align}
+M_{crit\_break} = \frac{\pi}{32}f_{knot}MOR\cdot dbh^3
+\end{align}
+where $M_{crit\_break}$ is expressed in N m, dbh (m) is the stem diameter at breast height, and $f_{knot}$ is a factor to account for the presence of knots that reduces the MOR from the values obtained for knot-free samples (as in e.g. Lavers, 1969). The value of $f_{knot}$ is scaled $(0,\ 1]$ and is species-specific.
+
+## Resistance to overturning
+
+The resistance to overturning represents the main empirical component of ForestGALES (Gardiner et al., 2000). The relationship between stem weight and anchorage strength is based on tree pulling experiments on almost 2000 conifer trees on a range of typical UK forest soils conducted by the Forestry Commission (FC) of Great Britain (Fraser and Gardiner, 1967; Ray and Nicoll, 1998). These tests have since been replicated by other researchers to provide ForestGALES with uprooting resistance parameters for other species and species/soils combinations, as shown in the table below.
+
+|Species                                                          |Data source                                |Country                 |Number of pulled trees    |Reference
+|:----------------------------------------------------------------|:-----------------------------------------:|:----------------------:|:------------------------:|:--------
+|Sitka spruce (*Picea sitchensis (Bong.) Carr.*)                  |FC Database                                |United Kingdom          |1155                      |Nicoll et al., 2006
+|Norway spruce (*Picea abies (L.) H.Karst.*)                      |FC Database                                |United Kingdom          |144                       |Nicoll et al., 2006
+|White spruce (*Picea glauca (Moench) Voss.*)                     |Bespoke tree-pulling                       |Canada                  |80                        |Achim et al., 2005
+|Black spruce (*Picea mariana (Mill.) BSP*)                       |Bespoke tree-pulling                       |Canada                  |between 40 and 45         |Elie and Ruel, 2005
+|Jack pine (*Pinus banksiana Lamb.*)                              |Bespoke tree-pulling                       |Canada                  |between 40 and 45         |Elie and Ruel, 2005
+|Scots pine (*Pinus silvestris L.*)                               |FC Database                                |United Kingdom          |137                       |Nicoll et al., 2006
+|Corsican pine (*Pinus nigra subsp. laricio (Poir.) Maire*)       |FC Database                                |United Kingdom          |88                        |Nicoll et al., 2006
+|Lodgepole pine (*Pinus contorta Douglas*)                        |FC Database                                |United Kingdom          |244                       |Nicoll et al., 2006
+|Radiata pine (*Pinus radiata D.Don*)                             |Bespoke tree-pulling                       |New Zeland              |163                       |Moore and Quine, 2000
+|Maritime pine (*Pinus pinaster Ait.*)                            |Bespoke tree-pulling                       |France                  |74                        |Cucchi et al., 2004; Cucchi et al, 2005
+|European larch (*Larix decidua Mill.*)                           |FC Database                                |United Kingdom          |24                        |Nicoll et al., 2006
+|Japanese larch (*Larix kaempferi (Lamb.) Carr.*)                 |FC Database  / Kamimura (unpublished data) |United Kingdom / Japan  |44; 12                    |Nicoll et al., 2006
+|Hybrid larch (*Larix x eurolepis A.Henry*)                       |FC Database                                |United Kingdom          |NA^[Japanese larch values]|Nicoll et al., 2006
+|Douglas fir (*Pseudotsuga menziesii (Mirb.) Franco*)             |FC Database                                |United Kingdom          |40                        |Nicoll et al., 2006
+|Noble fir (*Abies procera Rehder*)                               |FC Database                                |United Kingdom          |16                        |Nicoll et al., 2006
+|Balsam fir (*Abies balsamea (L.) Mill.*)                         |Bespoke tree-pulling                       |Canada                  |41; 80                    |Ruel et al., 2000; Achim et al., 2005
+|Grand fir (*Abies grandis (Douglas ex D. Don) Lindley*)          |FC Database                                |United Kingdom          |40                        |Nicoll et al., 2006
+|Western hemlock (*Tsuga heterophylla (Raf.) Sarg.*)              |FC Database  / Bespoke tree-pulling        |United Kingdom / Canada |44; 20                    |Nicoll et al., 2006; Byrne and Mitchell, 2007 
+|Western redcedar (*Thuja plicata Donn ex D. Don*)                |FC Database  / Bespoke tree-pulling        |United Kingdom / Canada |8; 23                     |Nicoll et al., 2006; Byrne and Mitchell, 2007 
+|Japanese cedar (*Cryptomeria japonica (L.f.) D.Don*)             |Bespoke tree-pulling                       |Japan                   |10                        |Kamimura, 2007
+|Japanese cypress (*Chamaecyparis obtuse (Sieb. Et Zucc.) Endl.*) |Bespoke tree-pulling                       |Japan                   |9                         |Kamimura, 2007
+|Blue gum (*Eucalyptus globulus Labill.*)                         |Bespoke tree-pulling                       |Spain                   |24                        |Locatelli et al., 2016
+
+The tree-pulling experiments techniques are described in Nicoll et al. (2006). In a nutshell, the trees are pulled over until failure by a winch attached at half the stem height (or less for young  trees or trees with very strong anchorage e.g. *E. globulus* in Locatelli et al. 2016) and the force required to uproot the tree is measured. Crown volume and weight are measured to account for the maximum applied turning moment. Stem density is calculated from a section of the stem. A section of the trunk is retained for mechanical testing to determine MOE and MOR of green wood. The soil type and rooting depth are recorded. The size of the root/soil plate is measured.
+
+From the initial FC dataset, for each species the data were used to calculate regressions between the maximum recorded bending moment and various tree physical characteristics such as root depth, root weight, stem weight and combinations of parameters such as tree height multiplied by the square of the breast height diameter ($h\ dbh^2$). The best linear regression fit to the data was found between the maximum applied bending moment recorded ($M_{crit\_over}$, N m) and stem weight ($SW$, kg). This relationship has since been confirmed and applied in numerous other studies. For all combinations of trees and soil type for which sufficient data are available, a set of regressions forced through zero are calculated of the form:
+\begin{align}
+M_{crit\_over} = C_{reg}SW
+\end{align}
+where $C_{reg}$ (N m kg-1) is the regression coefficient, specific to species, soil type, and rooting depth (classified as shallow (< 80cm) and deep (> 80cm)). The regressions are forced through zero because as the tree stem weight approaches zero, so will the uprooting moment. When combinations of species and soil/rooting depth lack sufficient data for a robust linear regression analysis, best estimates of $C_{reg}$ are made based on the data from other species.
+
+The soil classification adopted in ForestGALES is based on UK soil classification (Kennedy, 2002):
+
+|**Soil class A**                 |**Soil class B**         |**Soil class C**       |**Soil class D**                  |
+|---------------------------------|-------------------------|-----------------------|----------------------------------|
+|**Freely-draining mineral soils**|**Gleyed mineral soils** |**Peaty mineral soils**|**Deep peats**                    |
+|Brown earth (freely-draining)    |Ironpan (gleyed)         |Ironpan (peaty)        |Juncus (or basin) bogs            |
+|Ironpan (freely-draining)        |Podzol (gleyed)          |Podzol (peaty)         |Molinia (or flushed blanket) bogs |
+|Podzol (freely-draining)         |Brown earth (gleyed)     |Peaty gley             |Sphagnum (or flat or raised) bogs |
+|Calcareous soil                  |Surface-water gley       |                       |Unflushed blanket bog             |  
+|Rankers and skeletal soils       |Ground-water gley        |                       |Eroded bog                        |
+|Littoral soils                   |                         |                       |                                  |
+|Man-made soils                   |                         |                       |                                  |
+
+
+## Bibliography
+- Achim, A., Ruel, J.-C., Gardiner, B.A., Laflamme, G., Meunier, S. 2005. Modelling the vulnerability of balsam fir forests to wind damage. Forest Ecology and Management, 204, 37-52.
+- Byrne, K.E. and Mitchell, S.J. 2013. Testing of WindFIRM/ForestGALES_BC: A hybrid-mechanistic model for predicting windthrow in partially harvested stands. Forestry, 86, 185-199.
+- Cucchi, V., Meredieu, C., Stokes, A., Berthier, S., Bert, D., Najar, M., Denis, A. and Lastennet, R., 2004. Root anchorage of inner and edge trees in stands of Maritime pine (*Pinus pinaster* Ait.) growing in different podzolic soil conditions. Trees, 18(4), pp.460-466.
+- Cucchi , V. , Meredieu , C. , Stokes , A. , de Coligny , F. , Suárez , J. and Gardiner , B. 2005 Modelling the windthrow risk for simulated forest stands of maritime pine (*Pinus pinaster* Ait.) . For. Ecol. Manage. 213 , 184 – 196
+- Elie, J.G. and Ruel, J.C. 2005. Windthrow hazard modelling in boreal forests of black spruce and jack pine. Canadian Journal of Forest Research - Revue Canadienne De Recherche Forestiere, 35, 2655-2663.
+- Fraser, A.I. and Gardiner, J.B.H. 1967. Rooting and stability in Sitka spruce. Forestry Commission Bulletin, 331-4.
+- Gardiner, B.A., Peltola, H.M., Kellomaki, S. 2000. Comparison of two models for predicting the critical wind speeds required to damage coniferous trees. Ecological Modelling, 129, 1-23.
+- Lavers, G.M., 1969. The Strength Properties of Timbers. For. Prod. Res. Lab., London
+- Jones, H.G., 1983. Plants and Microclimate: A Quantitative Approach to Environmental Plant Physiology. Cambridge University Press, Cambridge.
+- Kamimura, K. 2007. Developing a decision-support system for wind risk modelling as a part of forest management in Japan. Tokyo, Japan: The University of Tokyo.
+- Kennedy, F. 2000. The identification of soils for forest management, Edinburgh: Forestry Commission Publications.
+- Locatelli, T., Gardiner, B.A., Tarantola, S., Nicoll, B., Bonnefond, J.-M., Garrigou, D., Kamimura, K., Patenaude, G. 2016. Modelling wind risk to *Eucalyptus globulus* (Labill.) stands. Forest Ecology and Management, 365, 159-173.
+- Moore, J. and Quine, C.P. 2000. A comparison of the relative risk of wind damage to planted forests in Border Forest Park, Great Britain, and the Central North Island, New Zealand. Forest Ecology and Management, 135, 345-353.
+- Morgan, J. and Cannell, M.G.R. 1994. Shape of tree stems - a re-examination of the uniform stress hypothesis. Tree physiology, 14, 49-62.
+- Nicoll , B.C. , Gardiner , B.A. , Rayner , B. and Peace , A.J.2006 Anchorage of coniferous trees in relation to species, soil type and rooting depth . Can. J. For. Res.36 , 1871 – 1883.
+- Ray, D. and Nicoll, B.C. 1998. The effect of soil water-table depth on root-plate development and stability of Sitka spruce. Forestry, 71, 169-182.
+- Ruel, J.C., Quine, C.P., Meunier, S., Suarez, J. 2000. Estimating windthrow risk in balsam fir stands with the ForestGALES model. Forestry Chronicle, 76, 329-337.

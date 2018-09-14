@@ -1,0 +1,49 @@
+Package: fgr
+Type: Package
+Title: R Version of the ForestGALES wind risk model
+Version: 0.0.0.9000
+Date: 2018-04-19
+Authors@R: c(person("Tom", "Locatelli", role = c("cre", "aut"),
+                     email = "tom.locatelli@forestry.gsi.gov.uk"),
+              person("Barry", "Gardiner", role = c("aut", "cre"),
+                     email = "barry.gardiner@efi.int"),
+              person("Sophie", "Hale", role = c("aut", "cre"),
+                     email = "sophie.hale@forestry.gsi.gov.uk""),
+              person("Bruce", "Nicoll", role = c("aut", "cre"),
+                     email = "bruce.nicoll@forestry.gsi.gov.uk""),
+              person("Forest", "Research", role = "cph",
+                     email = "forestgales.support@forestry.gsi.gov.uk")       
+Author: Barry Gardiner[aut, cre],
+        Sophie Hale [aut, cre],
+        Bruce Nicoll[aut, cre],
+        Tom Locatelli [cre, aut]
+        Forest Research [cph]
+Maintainer: Forest Research <forestgales.support@forestry.gsi.gov.uk>
+Description: The R version of the wind risk model ForestGALES. It contains
+    both the traditional roughness method (for stand-level calculations), and
+    the 'turning moment coefficient' version (for single-tree calculations).
+    Wrapper functions exist for both methods to calculate the critical wind
+    speeds of damage for stem breakage and tree uprooting. Probabilities of
+    damage can be calculated when information on the local wind climate is
+    known. The package includes model parametrisation for 23 tree species 
+    (19 conifers and 4 broadleaves). Users can override most parameters for 
+    available species, or introduce new species by providing new parameters
+    values. Functions are available to users to calculate aerodynamic properties
+    of canopies for wind climate modelling, such as canopy roughness and zero 
+    plane displacement. Detailed descriptions of both the roughness and the 
+    single-tree methods can be found in: Hale, S.E., Gardiner, B., Peace, A., 
+    Nicoll, B., Taylor, P. and Pizzirani, S., 2015. Comparison and validation of 
+    three versions of a forest wind risk model. Environmental Modelling & 
+    Software, 68, pp.27-41. DOI: https://doi.org/10.1016/j.envsoft.2015.01.016
+    A global sensitivity analysis of the roughness method can be found in:
+    Locatelli, T., Tarantola, S., Gardiner, B. and Patenaude, G., 2017. 
+    Variance-based sensitivity analysis of a wind risk model-Model behaviour 
+    and lessons for forest modelling. Environmental Modelling & Software, 87, 
+    pp.84-109. DOI: https://doi.org/10.1016/j.envsoft.2016.10.010
+License: CC BY-NC-ND 4.0
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr

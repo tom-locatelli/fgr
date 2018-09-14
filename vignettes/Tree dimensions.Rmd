@@ -1,0 +1,43 @@
+---
+title: "Tree Dimensions"
+author: "Locatelli, T. Hale, S. Nicoll, B. Gardiner, B."
+date: "`r Sys.Date()`"
+output: rmarkdown::pdf_document
+vignette: >
+  %\VignetteIndexEntry{Tree Dimensions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+Both the '*roughness*'and the *TMC* methods require that some tree dimensions are known (i.e. provided by the user) or calculated within the model's workflow.
+
+## Top height and mean height
+
+Top stand height (e.g. the average height of the 100 trees per hectare with the largest dbh) is a commonly used measurement in forest management, especially in the UK.
+For the roughness method, ForestGALES^[Throughout the package documentation, we will use the name *ForestGALES* to refer to the model characteristics as described in e.g. Hale et al. (2015) or Gardiner et al. (2000, 2008). Conversely, when we refer to the functionalities implemented in this package, we use the name *fgr*] calculates the CWS and risk of damage for the mean tree in the stand. For this, top height is converted into mean height using linear regression coefficients derived from forest inventory data. Other mean tree characteristics are calculated from mean height.
+
+For the *TMC* method, the mean height of the stand is used in the calculations of aerodynamic roughness ($z_0$) and zero-plane displacement ($d$), while stand's top height is used in the `elevate` function, which is used to convert the critical wind speeds to the wind speed 10 meters above zero plane displacement (to compare with for anemometers' data, see the `Critical Wind Speeds` vignette).
+
+Knowledge of either top height or mean height is essential to calculate CWS in ForestGALES.
+
+## Canopy width
+
+In the roughness method, mean canopy width is calculated from species-specific coefficient of a linear regression against mean stand Dbh.
+
+In the TMC method, the canopy width of individual trees is similarly calculated from species-specific coefficient of a linear regression against their Dbh. Stand mean canopy width is calculated with the same function, using the mean stand Dbh and the linear regression coefficients of the predominant species in the stand, and is used in the calculations of aerodynamic roughness ($z_0$) and zero-plane displacement ($d$).
+
+## Canopy depth
+
+In the *roughness* method, mean canopy depth is calculated from species-specific coefficient of a linear regression against mean stand height.
+
+In the *TMC* method, the canopy depth of individual trees is similarly calculated from species-specific coefficient of a linear regression against their height. Stand mean canopy depth is calculated with the same function, using the mean stand height and the linear regression coefficients of the predominant species in the stand, and is used in the calculations of aerodynamic roughness ($z_0$) and zero-plane displacement ($d$).
+
+## Stem diameter at tree base
+
+The masses of the stem, of the overarching canopy, and of snow (when present), contribute to the additional turning moment captured by the `Deflection Loading Factor`. Some of these calculations are performed at tree base (e.g. the Second area moment of Inertia) which require that stem diameter at tree base is calculated from Dbh.

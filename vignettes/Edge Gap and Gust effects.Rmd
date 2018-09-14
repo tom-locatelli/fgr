@@ -1,0 +1,74 @@
+---
+title: "Edge, Gap, and Gust effects"
+author: "Locatelli, T. Hale, S. Nicoll, B. Gardiner, B."
+date: "`r Sys.Date()`"
+output: rmarkdown::pdf_document
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+Understanding the effects of stand edge, upwind gap size, and gustiness is one of the most complex aspects of ForestGALES^[Throughout the package documentation, we will use the name *ForestGALES* to refer to the model characteristics as described in e.g. Hale et al. (2015) or Gardiner et al. (2000, 2008). Conversely, when we refer to the functionalities implemented in this package, we use the name *fgr*]. In this vignette, we attempt to illustrate these concepts in an understandable manner.
+
+Regardless of which method (*roughness* vs *TMC*) is applied, initial calculations of the relationship between elevated wind speed and bending moment are always performed as if the tree were located 9 times tree height inside the forest. Corrections are then introduced into the calculations to incorporate the effects of Edge type ("green", i.e. acclimated, or "brown", i.e. recently exposed - effectively simulating trees at the windward edge of a forest stand), of Gap size, and of gustiness (for the *roughness* method).
+
+## Why Edge factors?
+Wind speed measurements are taken at 10m above $d$ (e.g. from weather stations). Similarly, airflow models such as WAsP (https://www.wasp.dk/) model wind speed and direction at this height. In a forest, zero-plane displacement ($d$) and surface roughness ($z_0$) are meaningless when close to the upwind edge because of the effect of the edge itself on the turbulent flow. Stacey et al. (1994) proved that at a distance inside the forest equal to 9 times mean stand height the edge effect is negligible.
+
+For a tree at any position within the stand we can calculate the critical bending moment from tree characteristics (i.e. the corresponding force that would cause the tree to overturn or snap). When we are at 9 times the mean tree height (or more) within the forest, $d$ is meaningful (because the flow is in equilibrium i.e. not affected by the edge anymore) and we can immediately calculate the critical wind speed that would result in such force from $d$ and $z_0$. When we are at less than 9 times the tree height from the edge, the flow is not in equilibrium (so $d$ and $z_0$ are not meaningful) and we need a way of calculating the critical wind speed corresponding to the critical bending moment of this tree closer to the edge.
+
+To do so, we use the relationship between critical bending moment and distance from edge. This allows us to calculate what the corresponding critical bending moment would be of a tree closer to the edge, from the critical bending moment of a tree at 9 times mean tree height inside the forest. These are the critical bending moment curves shown in Figure 12 in Stacey et al. (1994), further detailed by Gardiner et al. (1997) for different tree spacings, and mathematically expressed in Gardiner et al. (2000) (Eq. 4 and 5 in the published paper). Once we have calculated the critical bending moment for this "closer-to-the-edge tree", we can calculate the corresponding wind speed that would induce that critical bending moment at the “inside” tree using $d$ and $z_0$. Now, this wind speed might not be critical for the “inside” tree, but it is for the tree closer to the edge.
+
+## Why a Gust Factor?
+In the roughness method we cannot relate the maximum critical bending moment with the CWS. We can only relate the mean critical bending moment to the CWS because of the logarithmic profile of mean (i.e. time-averaged) wind speed over a forest canopy (Eq. 1 in Gardiner et al., 2000). For this, we have to use the Gust Factor (empirically derived by Gardiner et al., 1997) to convert the critical (i.e. maximum) critical bending moment to mean critical bending moment. After this conversion, we can apply the above process to the mean critical bending moment of the “edge” tree to calculate the mean critical bending moment of the “inside” tree, and from this the corresponding wind speed. For this reason, we use the “Edge mean” function derived from Eq. 4 in Gardiner et al. (2000).
+
+In the TMC method, we have empirically determined a relationship between the maximum critical bending moment and the mean wind speed. Consequently, we do not need to use the Gust Factor to convert from max critical bending moment to mean critical bending moment, and we can calculate the max critical bending moment of the “inside” tree using the “Edge max” function derived from Eq. 5 in Gardiner et al. (2000).
+
+Two approaches exist to the calculation of the Gust Factor. The original (“Old”) calculations are based on Gardiner et al. (1997) where the effect of spacing and distance from the edge (both normalised by tree height so as to provide portability) on the maximum and mean bending moments were calculated (see Figures 7a and 7b in the reference). Figure 6 in the same paper shows the relationship between maximum and mean critical bending moment in response to an upwind gap of increasing size (equally normalised by tree height).  Adjustments to the Old approach to the edge effect calculations were derived from this Figure. Peltola et al. (1999) report the power fits to these gap effect data in their Eq. 8 and 9. However, it was subsequently discovered that the Old approach to the edge effect calculations showed an unexpected non-linear behaviour at close spacing. This discovery prompted the development of a new approach to calculating edge effects, described in the previous section.
+
+## The Gap Effect
+The new approach to edge effect calculations however was not equipped with adjustments for gap effects. As a response to this issue, formulas were devised to incorporate the gap effect adjustment of the old approach in the new approach. This is based on the key concepts that:
+
+1. The value of the gustiness at the upwind edge will match that at a location > 9 times mean tree height when gap size = 0;
+2. The value of the gustiness at the upwind edge will equal that obtained for a forest with an infinite upwind gap when gap size > 10 times mean tree height;
+3. The value of gustiness calculated well inside the forest (> 9 times mean tree height) is not affected by the presence/absence of an upwind gap;
+4. The ratios between the values of gustiness calculated with the old and new approaches are constant for trees at the upwind edge and trees well inside the forest (>9 times mean tree height).
+
+Concepts 1 to 3 are shown in the simplified formula for the calculation of gustiness implemented in the official release of ForestGALES:
+\begin{align}
+G_x=  x/(9\cdot h) \cdot  (G_{(x=9\cdot h)} - G_{(Edge,Gap)} )+ G_{(Edge,Gap)}
+\end{align}
+Where $G_x$ is the value of gustiness at any point in the forest between the edge and 9 times mean tree height; $x$ is the distance from the edge within this segment; $h$ is tree height; $G_{(x=9\cdot h)}$ is the value of gustiness at $x = 9\cdot h$ for gap size = 0; $G_{(Edge,Gap)}$ is the gustiness value at the edge when a gap is present of a size between 0 and $10\cdot h$.
+In this formula, the term $x/(9\cdot h)$ adjusts the calculation of the gustiness as a function of the distance from the edge. $G_x$ increases monotonically from the edge to the inside of the forest, asymptotically peaking at $x = 9\cdot h$. That is, $G_{(x=9\cdot h)}$ is the maximum value of gustiness, and the difference between the maximum gustiness value and the value of gustiness at any point inside the forest decreases as one moves from the edge to $x=9\cdot h$. The value of $G_x$ is then simply calculated by adding this difference to $G_{(Edge,Gap)}$.
+
+The effect of an upwind gap on the gustiness calculations had been previously modelled for the old method of calculating edge effects. This was incorporated in the calculation of $G_{(Edge,Gap)}$ for the new method on the basis of the fourth key concept listed above. The calculation of $G_{(Edge,Gap)}$ can be decomposed in simplified form as:
+\begin{align}
+G_{(Edge,Gap)} = (Old.G_{(Edge,Gap)} - Old.G_{Edge})  \cdot  ((New.G_{(x=9\cdot h)} - New.G_{Edge}) / (Old.G_{(x=9\cdot h)} - Old.G_{Edge})) + New.G_{Edge}
+\end{align}
+Where “Old” and “New” refer to the methods described above. The fact that the ratio of the differences between the gustiness well inside the forest and that at the edge for the New and Old approaches is constant allows to apply the adjustment for the presence of a gap as calculated with the Old method to the value of gustiness at the edge calculated with the New method. The contribution of an upwind gap to the calculations of the gustiness in this formula is driven by the ratio between the maximum and mean gap factors derived from Eq. 8 and 9 in Peltola et al. (1999), which are scaled between 0 and 1 (the gap factors are explained in the next section).
+When a gap is absent, the gap factors are equal to zero and $Old.G_{(Edge,Gap)}$ approximates $Old.G_{(x=9\cdot h)}$. Therefore, the term within the first brackets in Eq. 2 is equal to the denominator of the term within the second bracket. They therefore cancel out and this leaves only the numerator of the second bracket ($(New.G_{(x=9\cdot h)} - New.G_{Edge})$) and $New.G_{Edge}$, resulting in $G_{(Edge,Gap)}$ being equal to $New.G_{(x=9\cdot h)}$. Conversely, for an infinite gap the max/mean gap factor ratio is equal to 1 and $Old.G_{(Edge,Gap)}$ is equal to $Old.G_{Edge}$, resulting in the term within the first brackets (i.e. $(Old.G_{(Edge,Gap)} - Old.G_{Edge})$) to be equal to zero. As a consequence, $G_{(Edge,Gap)}$ becomes equal to $New.G_{Edge}$.
+
+## Gap Factors
+Stacey et al. (1994) demonstrated that the effect of an upwind gap on the bending moment of a tree located at the upwind edge of a forest can be described with a power function. The authors called these effects on the maximum and mean bending moments ‘Gap Factors’. Peltola et al. (1999) report the formulas for maximum and mean bending moments in Eq. 8 and 9 of their paper. 
+These power formulas have the following form:
+\begin{align}
+Gap Factor =  (a+b_{gap.size}^{\,c})/d
+\end{align}
+In the absence of a gap, there is no gap effect on an edge tree so the bending moment equals that well inside a forest. This can be seen as the Gap Factor having no effect and this formula simplifies to $a/d$, which therefore corresponds to the bending moment inside the forest. Conversely, when gap is maximum (i.e. $10\cdot h$), the bending moment of a tree at the upwind edge of the forest has the largest possible value. That is, the Gap Factor equals to a multiplier of value 1 for the bending moment calculated at the edge of the forest. These considerations suggest that the Gap Factor lends itself well to being scaled between 0 and 1. The range $a/d$ to $(a+b_{(10\cdot h)}^c)/d$ must therefore be scaled to $[0, 1]$. Scaling can be achieved by normalising by this interval. This yields a Gap Factor that can be used as a multiplier ranging between 0 and 1 for the bending moments calculated on trees located at any distance from the edge of the forests, all the way inside the stand, and for any gap:
+\begin{align}
+Gap Factor = [(a+b_{gap.size}^{\,c})/d- a/d] / [(a+b_{(10\cdot h)}^{\,c})/d - a/d] = (b_{gap.size}^{\,c}) / (b_{(10\cdot h)}^{\,c})
+\end{align}
+
+## Bibliography
+- Gardiner, B.A., Stacey, G.R., Belcher, R.E., Wood, C.J. 1997. Field and wind tunnel assessments of the implications of respacing and thinning for tree stability. Forestry, 70, 233-252.
+- Gardiner, B.A., Peltola, H.M., Kellomaki, S. 2000. Comparison of two models for predicting the critical wind speeds required to damage coniferous trees. Ecological Modelling, 129, 1-23.
+- Hale, S.A., Gardiner, B.A., Peace, A., Nicoll, B., Taylor, P., Pizzirani, S. 2015. Comparison and validation of three versions of a forest wind risk model. Environmental Modelling & Software, 68, 27-41.
+- Peltola, H.M., Kellomaki, S., Vaisanen, H., Ikonen, V.P. 1999. A mechanistic model for assessing the risk of wind and snow damage to single trees and stands of Scots pine, Norway spruce, and birch. Canadian Journal of Forest Research-Revue Canadienne De Recherche Forestiere, 29, 647-661.
+- Stacey, G.R., Belcher, R.E., Wood, C.J., Gardiner, B.A. 1994. Wind flows and forces in a model spruce forest. Boundary-Layer Meteorology, 69, 311-334.

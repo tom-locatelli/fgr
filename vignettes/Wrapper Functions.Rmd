@@ -1,0 +1,322 @@
+---
+title: "Wrapper Functions"
+author: "Locatelli, T. Hale, S. Nicoll, B. Gardiner, B."
+date: "`r Sys.Date()`"
+output: rmarkdown::pdf_document
+vignette: >
+  %\VignetteIndexEntry{Wrapper Functions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+The *roughness* and the *TMC* methods are implemented in the *fgr*^[Throughout the package documentation, we will use the name *ForestGALES* to refer to the model characteristics as described in e.g. Hale et al. (2015) or Gardiner et al. (2000, 2008). Conversely, when we refer to the functionalities implemented in this package, we use the name *fgr*] R package via two wrapper functions: `fg_rou` and `fg_tmc`, respectively.
+In handling the input variables, both wrappers divide them in three categories: 'Essentials', 'Desirables', and 'Advanced'. The inputs included in these categories differ between the two wrappers as the *roughness* and *TMC* methods operate largely in different ways (see other documentation files - e.g. `Critical Wind Speeds` - for differences between the *roughness* and *TMC* methods). Wind climate inputs (e.g. Weibull A and k parameters of the mean wind speed distribution, or DAMS scores for Great Britain only) are only necessary to calculate the probabilities of damage associated with the critical wind speeds (CWS) of damage (for breakage and overturning). When not available, only the CWS are reported in the outputs (probabilities are reported as NAs).
+
+## Overview: Inputs
+- Essentials include those inputs without which the model cannot run, as the most basic information needs to be provided in order to estimate the CWS of damage. Typically, these include tree species, tree height, dbh, and mean spacing. When only these inputs are provided, the accuracy of model predictions is expectedly limited, as the stands/trees are not fully characterised. Stand/tree id are included in the Essentials to facilitate recod-keeping. When one or more essentials are not provided, the simulations will stop and the model will return an error;
+- Desirables provide additional information on the stands/trees being simulated. Typically, this category includes mean canopy values (depth and width), soil type, rooting depth, the size of any upwind gaps and the nature ("green" or "brown") of upwind stand edges. When these inputs are provided, all the necessary information for caclulating the CWS for stands/trees is available, and the *roughness* and *TMC* method can be implemented fully with lower prediction errors. When any of these inputs are not available, they are either calculated from species-specific parameters (i.e. for crown dimensions), or are set to a nominal value (i.e. for soil type, rooting depth, and gap size and type). When at least one of the inputs in this category is not provided, the moel will issue a warning;
+- Advanced inputs allow users to customise their simulations by changing parameter values (both species-specific and general) in their simulations. The default values of these parameters are stored in the *Internal Data* of the *fgr* package. The Advanced inputs include: $f_{knot}$, MOE, MOR, and density of green wood, and crown density; aerodynamic parameters that describe the streamlining of the canopy (e.g. $C_{drag}$ and $N_{drag}$, see the `Streamlining and Drag` documentation); crown volume, to override the species-specific calculations in *fgr*; stem volume, to override the taper functions provided with the package (see the `Stem Volume` documentation); $C_{reg}$ values to characterise tree anchorage, when tree-pulling data are available (for the tree pulling protocol, contact the authors and/or see Nicoll et al., 2006); snow depth and density (default values are: snow depth = 0m, and snow density = 150 kg m-3); finally, air density ($\rho$) can be edited for applications in airflow studies.
+For the *TMC* method, the possibility to choose a competition index (either the distance-independent *Bal*, based on basal area, or the distance-dependent *Heg*, based on Hegyi (1974) - see the `Turning coefficients functions` documentation) belongs to the Advanced input category.
+
+The inputs for the `fg_rou` and the `fg_tmc` wrapper functions for the *roughness* and the *TMC* methods are summarised in Table 1. The category of the inputs (Essential, Desirable, Advanced) is shown.
+
+Table 1: Input variables for the wrapper functions of the *roughness* and the *TMC* methods. E: Essential input; D: Desirable input; A: Advanced input.
+
+| Input             |*roughness*:`fg_rou`|:*TMC*:`fg_tmc`|Default values & Notes                                                |
+|:-----------------:|:------------------:|:-------------:|:--------------------------------------------------------------------:|
+|stand_id           |         E          |       E       |  *NA* - Needs to be in inverted commas\*                             |
+|tree_id            |        *NA*        |       E       |  *NA* - Needs to be in inverted commas\*                             |
+|species            |         E          |       E       |Needs to be in inverted commas e.g. "SP" for Scots pine\*             |
+|mean_ht            |         E\*\*      |      *NA*     |  *NA*                                                                |
+|top_ht             |         E\*\*      |      *NA*     |  *NA*                                                                |
+|mean_dbh           |         E          |      *NA*     |  *NA*                                                                |
+|tree_ht            |        *NA*        |       E       |  *NA*                                                                |
+|dbh                |        *NA*        |       E       |  *NA*                                                                |
+|spacing            |         E          |      *NA*     |  *NA*                                                                |
+|spacing_current    |        *NA*        |       E       |  *NA*                                                                |
+|stand_mean_ht      |        *NA*        |       E\*\*   |  *NA*                                                                |
+|stand_top_ht       |        *NA*        |       E\*\*   |  *NA*                                                                |
+|stand_mean_dbh     |        *NA*        |       E       |  *NA*                                                                |
+|weib_a             |         D\*\*\*    |       D\*\*\* |Only required for probabilities of damage                             |
+|weib_k             |         D\*\*\*    |       D\*\*\* |Only required for probabilities of damage. Defaults to 1.85           |
+|predominant_species|        *NA*        |       D       |Defaults to `species`. Needs to be in inverted commas e.g. "SP" for Scots pine\*|
+|full_output        |         D          |       D       |Defaults to 0 e.g. short output                                       |
+|mean_cr_width      |         D          |      *NA*     |Defaults to calculated with species-specific parameters               |
+|mean_cr_depth      |         D          |      *NA*     |Defaults to calculated with species-specific parameters               |
+|cr_width           |        *NA*        |       D       |Defaults to calculated with species-specific parameters               |
+|cr_depth           |        *NA*        |       D       |Defaults to calculated with species-specific parameters               |
+|stand_cr_width     |        *NA*        |       D       |Defaults to calculated with species-specific parameters               |
+|stand_cr_depth     |        *NA*        |       D       |Defaults to calculated with species-specific parameters               |
+|soil_group         |         D          |       D       |Defaults to Soil A - Freely draining mineral soils\*\*\*\*            |
+|rooting            |         D          |       D       |Defaults to average of shallow and deep rooting values                |
+|new_edge           |         D          |      *NA*     |Defaults to green edge                                                |
+|dist_edge          |        *NA*        |       D       |Defaults to 9 times mean height                                       |
+|gap_size           |         D          |       D       |Defaults to 0                                                         |
+|spacing_before     |        *NA*        |       D       |Defaults to `spacing_current`                                         |
+|years_since_thin   |        *NA*        |       D       |Defaults to 5 years (fully re-acclimated)                             |
+|moe                |         A          |       A       |Defaults to species-specific value                                    |
+|mor                |         A          |       A       |Defaults to species-specific value                                    |
+|fknot              |         A          |       A       |Defaults to species-specific value                                    |
+|stem_vol           |         A          |       A       |Defaults to calculated with species-specific parameters               |
+|crown_vol          |         A          |       A       |Defaults to calculated with species-specific parameters               |
+|stem_density       |         A          |       A       |Defaults to species-specific value                                    |
+|crown_density      |         A          |       A       |Defaults to species-specific value                                    |
+|c_reg              |         A          |       A       |Defaults to species-specific value for selected soil/rooting depth    |   
+|c_drag             |         A          |       A       |Defaults to species-specific value                                    |
+|n_drag             |         A          |       A       |Defaults to species-specific value                                    |
+|drag_upper_limit   |         A          |       A       |Defaults to species-specific value                                    |
+|snow_depth         |         A          |       A       |Defaults to 0 (no snow)                                               |
+|snow_density       |         A          |       A       |Defaults to 150 kg m-3                                                |
+|ci                 |        *NA*        |       A       |Defaults to "None" If used, it needs to be in inverted commas (e.g. "Bal"\*|
+|ci_value           |        *NA*        |       A       |Defaults to *NA*                                                      |
+|ro                 |         A          |       A       |Defaults to 1.2226 kg m-3                                             |
+|x                  |         A          |       A       |Defaults to *NA*                                                      |
+|y                  |         A          |       A       |Defaults to *NA*                                                      |
+|z                  |         A          |       A       |Defaults to *NA*                                                      |
+|dams               |         A          |       A       |Only required for probabilities of damage when weib_a is not available|
+
+\* Wrapping the value in inverterd commas can be automatised in batch mode (see relevant section in this vignette)
+\*\*:At least one of top_ht/mean_ht (for *roughness*), or one of stand_top_ht/stand_mean_ht (for *TMC*) is required;
+\*\*\*: weib_a and weib_k (or dams in absence of both and if in the UK) required to calculate the probabilities of damage.
+\*\*\*\*: see classification in `Critical Resistive Moments` documentation
+
+The order of the input variables in the arguments of the `fg_rou` and the `fg_tmc` functions is such that the Essential inputs are fed to the functions at the beginning of their arguments; the Essentials are followed by the option for a full or "short" output (see next section), followed by the remaining Desirable and Advanced Inputs. These are set to default to *NA* in the declaration of the functions' arguments. Note that the text in `species` and `predominant_species` needs to be enclosed in inverted commas (e.g. "SP" for Scots pine).
+
+## Overview: Outputs
+For both the *roughness* and the *TMC* methods, users have the possibility to choose between a full or a partial output by assigning a value of 1 or 0, respectively, to the `full_output` input variable. Warnings are included in both output types. 
+A partial output is composed of only 11 and 12 variables for the *roughness* and *TMC* methods, respectively (the latter includes `tree_id` as well as `stand_id`). A partial output would suit most applications seeking to establish the vulnerability of forest stands and the risk they are exposed to (the latter only when wind climate information, e.g. Weibull parameters of mean wind speed distribution, are available). 
+The long output features over 60 and 70 outputs for the *roughness* and the *TMC* methods respectively. These inlcude: details of streamlining variables (e.g. $d$, $z_0$, $\gamma$ and $\Lambda$, see the `Streamlining and Drag` documentation); calculated stem and crown volumes; mean stand values (tree height, dbh, crown dimensions); the effect of gust winds (for the *roughness* method only, see the `Bending Moment Roughness` documentation); the effects of stand edge and upwind gap; the critical moments of breakage and overturning (see the `Critical Resistive Moments` documentation), and a summary of the inputs. Table 2 summarises the model outputs for the two methods.
+
+
+Table 2: Variables in the full and the short outputs for the *roughness* and the *TMC* methods
+
+| Output                | *roughness* full | *roughness* short | *TMC* full | *TMC* short |
+|:---------------------:|:----------------:|:-----------------:|:----------:|:-----------:|
+|stand_id               |        X         |         X         |     X      |      X      |
+|tree_id                |                  |                   |     X      |      X      |
+|u10_b                  |        X         |         X         |     X      |      X      |
+|uh_b                   |        X         |                   |     X      |             |
+|prob_b                 |        X         |         X         |     X      |      X      |
+|zpd_b                  |        X         |                   |     X      |             | 
+|z0_b                   |        X         |                   |     X      |             |
+|drag_b                 |        X         |                   |     X      |             |
+|gammasolved_b          |        X         |                   |     X      |             |
+|lambdacapital_b        |        X         |                   |     X      |             |
+|breaking_moment        |        X         |                   |     X      |             |
+|u10_o                  |        X         |         X         |     X      |      X      |
+|uh_o                   |        X         |                   |     X      |             |
+|prob_o                 |        X         |         X         |     X      |      X      |
+|zpd_o                  |        X         |                   |     X      |             |
+|z0_o                   |        X         |                   |     X      |             |
+|drag_o                 |        X         |                   |     X      |             |
+|gammasolved_o          |        X         |                   |     X      |             |
+|lambdacapital_o        |        X         |                   |     X      |             |
+|overturning_moment     |        X         |                   |     X      |             |
+|mode_of_damage         |        X         |         X         |     X      |      X      | 
+|u10_damage             |        X         |         X         |     X      |      X      |
+|u_damage               |        X         |                   |     X      |             |
+|prob_damage            |        X         |         X         |     X      |      X      |
+|bm_rou                 |        X         |                   |            |             |
+|tmc                    |                  |                   |     X      |             |
+|tmr_simple             |                  |                   |     X      |             |
+|ci                     |                  |                   |     X      |             |
+|ci_value               |                  |                   |     X      |             |
+|dlf_calc               |        X         |                   |     X      |             |
+|edge_gap_gust_factor   |        X         |                   |            |             |
+|edge_gap_factor        |                  |                   |     X      |             |
+|species                |        X         |         X         |     X      |      X      |
+|mean_ht                |        X         |                   |            |             |
+|top_ht                 |        X         |                   |            |             |
+|mean_dbh               |        X         |                   |            |             |
+|predominant_species    |                  |                   |     X      |             |
+|stand_mean_ht          |                  |                   |     X      |             |
+|stand_top_ht           |                  |                   |     X      |             |
+|stand_mean_dbh         |                  |                   |     X      |             |
+|stand_cr_width         |                  |                   |     X      |             |
+|stand_cr_depth         |                  |                   |     X      |             |
+|tree_ht                |                  |                   |     X      |             |
+|dbh                    |                  |                   |     X      |             |
+|cr_width               |                  |                   |     X      |             |
+|cr_depth               |                  |                   |     X      |             |
+|spacing                |        X         |                   |            |             |
+|spacing_current        |                  |                   |     X      |             |
+|spacing_before         |                  |                   |     X      |             |
+|years_since_thin       |                  |                   |     X      |             |
+|mean_cr_width          |                  |                   |     X      |             |
+|mean_cr_depth          |                  |                   |     X      |             |
+|soil_group             |        X         |                   |     X      |             |
+|rooting                |        X         |                   |     X      |             |
+|weib_a                 |        X         |                   |     X      |             |
+|weib_k                 |        X         |                   |     X      |             |
+|new_edge               |        X         |                   |            |             |
+|dist_edge              |                  |                   |     X      |             |
+|gap_size               |        X         |                   |     X      |             |
+|moe                    |        X         |                   |     X      |             |
+|mor                    |        X         |                   |     X      |             |
+|fknot                  |        X         |                   |     X      |             |
+|stem_vol               |        X         |                   |     X      |             |
+|crown_vol              |        X         |                   |     X      |             |
+|stem_density           |        X         |                   |     X      |             |
+|crown_density          |        X         |                   |     X      |             |
+|stem_weight            |        X         |                   |     X      |             |
+|crown_weight           |        X         |                   |     X      |             |
+|c_reg                  |        X         |                   |     X      |             |
+|c_drag                 |        X         |                   |     X      |             |
+|n_drag                 |        X         |                   |     X      |             |
+|drag_upper_limit       |        X         |                   |     X      |             |
+|snow_depth             |        X         |                   |     X      |             |
+|snow_density           |        X         |                   |     X      |             |
+|snow_vol               |        X         |                   |     X      |             |
+|snow_weight            |        X         |                   |     X      |             |
+|ro                     |        X         |                   |     X      |             |
+|x, y, z                |        X         |                   |     X      |             |
+|dams                   |        X         |                   |     X      |             |
+|default_warning        |        X         |         X         |     X      |      X      |
+|max_stem_weight_warning|        X         |         X         |     X      |      X      |
+
+It should be noted that the outputs of `fg_rou` and `fg_tmc` are given as a list. In order for the results to be accessible in a format compatible to e.g. a CSV file, they need to be e.g. converted to a data frame (with the `as.data.frame` base-R function) and transposed (with the `t` base-R function). This is all the more imporant when working with multiple stands/trees, as shown in the example in the next section.
+
+## Vectorising the wrapper functions with batch-mode: multiple stands and multiple trees
+"Out of the box", the `fg_rou` and the `fg_tmc` wrapper functions for the *roughness* and the *TMC* methods are only applicable to 1 stand and 1 tree, respectively. 
+For the *roughness* method to work in "batch mode", i.e. to compute numerous forest stands at once, and for the *TMC* method to compute multiple trees populating one or more stands, the `fg_rou` and the `fg_tmc` wrapper functions need to be 'vectorized'. In R, this can be done in multiple ways, e.g. using the functions of the `apply` family. In our experience, we find it quicker to create a new 'vectorized' function using the `Vectorize` function in base R. As an example:
+```
+fg_rou_v <- Vectorize(fg_rou) #The names of the new vectorized functions are of course arbitrary
+fg_tmc_v <- Vectorize(fg_tmc)
+```
+The inputs of the vectorised function need to be vectors of the same length (shorter vectors would be recycled, this can work with e.g. `full_output`, `species`, etc.).
+Using the `df_tmc` example dataset, this is trivially achieved as below. Note the use of the `as.character()` function for `species`, `stand_id`, `tree_id`, `predominant_species`, and `ci`, which otherwise would be treated as factors:
+```
+stand_id <- as.character(df_tmc$stand_id)
+tree_id <- as.character(df_tmc$tree_id)
+species <- as.character(df_tmc$species)
+tree_ht <- df_tmc$tree_ht
+dbh <- df_tmc$dbh
+spacing_current <- df_tmc$spacing_current
+stand_mean_ht <- df_tmc$stand_mean_ht
+stand_top_ht <- df_tmc$stand_top_ht
+stand_mean_dbh <- df_tmc$stand_mean_dbh
+predominant_species <- as.character(df_tmc$predominant_species)
+full_output <- 1
+weib_a <- df_tmc$weib_a
+weib_k <- df_tmc$weib_k
+cr_width <- df_tmc$cr_width
+cr_depth <- df_tmc$cr_depth
+stand_cr_width <- df_tmc$stand_cr_width
+stand_cr_depth <- df_tmc$stand_cr_depth
+soil_group <- df_tmc$soil_group
+rooting <- df_tmc$rooting
+dist_edge <- df_tmc$dist_edge
+gap_size <- df_tmc$gap_size
+spacing_before <- df_tmc$spacing_before
+years_since_thin <- df_tmc$years_since_thin
+moe <- df_tmc$moe
+mor <- df_tmc$mor
+fknot <- df_tmc$fknot
+stem_vol <- df_tmc$stem_vol
+crown_vol <- df_tmc$crown_vol
+stem_density <- df_tmc$stem_density
+crown_density <- df_tmc$crown_density
+c_reg <- df_tmc$c_reg
+c_drag <- df_tmc$c_drag
+n_drag <- df_tmc$n_drag
+drag_upper_limit <- df_tmc$drag_upper_limit
+snow_depth <- df_tmc$snow_depth
+snow_density <- df_tmc$snow_density
+ci <- as.character(df_tmc$ci)
+ci_value <- df_tmc$ci_value
+ro <- df_tmc$ro
+x <- df_tmc$x
+y <- df_tmc$y
+z <- df_tmc$z
+dams <- df_tmc$dams 
+
+out_tmc <- as.data.frame(t(fg_tmc_v(stand_id, tree_id, species, tree_ht, dbh, spacing_current, predominant_species, stand_mean_ht, stand_mean_dbh,
+                                    stand_top_ht, full_output, weib_a, weib_k, ci, ci_value, cr_width, cr_depth, stand_cr_width, stand_cr_depth, 
+                                    soil_group, rooting, dist_edge, gap_size, spacing_before, years_since_thin, moe, mor, fknot, stem_vol, 
+                                    crown_vol, stem_density, crown_density, c_reg, c_drag, n_drag, drag_upper_limit, snow_depth, snow_density, 
+                                    ro, x, y, z, dams))) 
+#Note the use of the vectorised TMC function ("fg_tmc_v""), and the transpose ("t") and data frame ("as.data.frame") functions to convert the list outputs of the fg_tmc function to a data.frame object suitable for extracting a CSV file.
+```
+One can apply a similar procedure with the *roughness* method (e.g. using the `df_rou` dataset). 
+It should be noted that inputs need to be provided solely for the Essential variables (plus `full_output`). Given the order of the functions arguments (see **Overview: Inputs** in this document), all the other inputs (Desirables and Advanced) can be omitted if unavailable, and will default to the values described in Table 1. Using the `df_tmc_2` dataset as an example, be mindful that it is required to use the `as.character()` function for `species`, `stand_id`, `tree_id`, `predominant_species`, and `ci`, which  would otherwise be treated as factors:
+```
+stand_id <- as.character(df_tmc_2$stand_id)
+tree_id <- as.character(df_tmc_2$tree_id)
+species <- as.character(df_tmc_2$species)
+tree_ht <- df_tmc_2$tree_ht
+dbh <- df_tmc_2$dbh
+spacing_current <- df_tmc_2$spacing_current
+stand_mean_ht <- df_tmc_2$stand_mean_ht
+stand_top_ht <- df_tmc_2$stand_top_ht
+stand_mean_dbh <- df_tmc_2$stand_mean_dbh
+predominant_species <- as.character(df_tmc_2$predominant_species)
+full_output <- 1
+
+out_tmc_2 <- as.data.frame(t(fg_tmc_v(stand_id, tree_id, species, tree_ht, dbh, spacing_current, stand_mean_ht, stand_top_ht, stand_mean_dbh,  predominant_species, full_output)))
+```
+
+##Calculating risk throughout a rotation
+A typical application of ForestGALES is in forecasting the risk to a stand throughout a rotation. The `df_rou_2` example dataset contains stand-averaged, tree-level growth data modelled with the MOSES-GB growth model (https://www.forestresearch.gov.uk/research/modelling-mixed-age-and-mixed-species-stands/). The `df_rou_2` example dataset summarises the Essential inputs to calculate the CWS and risk that a Sitka spruce (*Picea sitchensis (Bong.) Carr.*) stand is exposed to throughout a rotation. 
+
+The first step is again to vectorise the `fg_rou` function:
+```
+fg_rou_v <- Vectorize(fg_rou)
+```
+Secondly, the `df_rou_2` dataset is split in its component variables. The stand is in a location with a wind climate described by the Weibull parameters in the dataset. Note that in the dataset, columns are assigned to `weib_a` and `weib_k`. The values of these variables in the dataset remain constant throughout the rotation. In reality, they are likely to change due to e.g. changes in the roughness of the surrounding area (e.g. due to changes in land-use such as harvesting of a neighbouring stand), and climate change (current projections of the future wind climate (e.g.) indicate an increase of the likelihood of extreme events (the *k* parameter of the Weibull distribution), but possibly no changes in the mean wind speed (the *A* parameter)).
+
+For the purposes of this example, we are only concerned with the short output, so we can set `full_output` to 0 (i.e. "short" output). As for the *TMC* examples above, we want to treat `species` and `stand_id` as character type, not as factors:
+```
+stand_id <- as.character(df_rou_2$stand_id)
+species <- as.character(df_rou_2$species)
+mean_ht <- df_rou_2$mean_ht
+mean_dbh <- df_rou_2$mean_dbh
+spacing <- df_rou_2$spacing
+full_output = 0
+weib_a <- df_rou_2$weib_a
+weib_k <- df_rou_2$weib_b
+
+out_rou <- as.data.frame(t(fg_rou_v(stand_id, species, mean_ht, mean_dbh, spacing, full_output, weib_a, weib_k)))
+#Note again the use of the vectorised function ("fg_rou_v""), and the transpose ("t") and data frame ("as.data.frame") functions to convert the list outputs of the fg_rou function to a data.frame object suitable for extracting a CSV file.
+```
+
+The possibility of fully customising *fgr* inputs provides us with the opportunity of incorporating the effect of increasing values of the Moduli of Rupture (MOR) and of Elasticity (MOE) throughout the rotation. As shown by Moore et al. (2009), the mechanical properties of juvenile and mature wood of Sitka spruce are quite different, with wood becoming stiffer and more resistant to breakage as trees age. 
+With either experimental knowledge of MOE and MOR throughout a rotation (e.g. from sampling thinned trees or applying acoustic tools on the standing stock), or with the use of modelled values, *fgr* users can refine the results of their simulations to incorporate the evolution of the stem's mechanical properties throughout a rotation, as done by Locatelli et al. (2018) in their modelling work with *Acacia* hybrid (*A. mangium X A. auricoliformis*). Following from the example above:
+```
+stand_id <- as.character(df_rou_2$stand_id)
+species <- as.character(df_rou_2$species)
+mean_ht <- df_rou_2$mean_ht
+mean_dbh <- df_rou_2$mean_dbh
+spacing <- df_rou_2$spacing
+full_output = 0
+weib_a <- df_rou_2$weib_a
+weib_k <- df_rou_2$weib_b
+moe <- df_rou_2$moe_by_age
+mor <- df_rou_2$mor_by_age
+
+out_rou_mech <- as.data.frame(t(fg_rou_v(stand_id, species, mean_ht, mean_dbh, spacing, full_output, weib_a, weib_k, moe = moe, mor = mor)))
+```
+
+The CWS throughout a rotation can be visualised by e.g. plotting the calculated CWS for damage (either breakage or uprooting) against stand age. With `ggplot2`, stand age (in this example, `df_rou_2$stand_age`) needs to be in the same dataframe as the CWS before a graph can be generated. 
+With base R plotting, plotting of CWS *vs* Age is trivial:
+
+```
+#No changes in MOE or MOR:
+plot(df_rou_2$stand_age ~ out_rou$u10_damage, type = "b", main = "CWS of damage throughout a rotation", xlab = "Stand Age (years)", ylab = "CWS (m s-1)")
+#
+#With age-dependent values of MOE and MOR:
+plot(df_rou_2$stand_age ~ out_rou_mech$u10_damage, type = "b", main = "CWS of damage throughout a rotation", sub = "Age-dependent values of MOE & MOR", xlab = "Stand Age (years)", ylab = "CWS (m s-1)")
+```
+
+
+## Bibliography
+- Hegyi F (1974) A simulation model for managing jack pine stands. In: Fries J (ed) Growth models for tree and stand simulation. Royal College of Forestry, Stockholm, pp 74–90
+- Locatelli, T., Bonomo, M.S., and Nicoll, B., 2018. Parametrising ForestGALES for *Acacia* hybrid to model windsnap risk in a pilot area in Thua Thien Hue province. UNIQUE Land Use. Freiburg, Germany.
+- Nicoll , B.C. , Gardiner , B.A. , Rayner , B. and Peace , A.J.2006 Anchorage of coniferous trees in relation to species, soil type and rooting depth . Can. J. For. Res.36, 1871 – 1883.
+- Moore, J., Achim, A., Lyon, A., Mochan, S. and Gardiner, B., 2009. Effects of early re-spacing on the physical and mechanical properties of Sitka spruce structural timber. Forest Ecology and Management, 258(7), pp.1174-1180.
+- Moore, J., 2011. Wood properties and uses of Sitka spruce in Britain (No. 015). Forestry Commission.

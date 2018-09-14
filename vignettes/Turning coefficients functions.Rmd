@@ -1,0 +1,99 @@
+---
+title: "Turning coefficients functions"
+author: "Locatelli, T. Hale, S. Nicoll, B. Gardiner, B."
+date: "`r Sys.Date()`"
+output: rmarkdown::pdf_document
+vignette: >
+  %\VignetteIndexEntry{Turning coefficients functions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+While the *roughness* method of ForestGALES^[Throughout the package documentation, we will use the name *ForestGALES* to refer to the model characteristics as described in e.g. Hale et al. (2015) or Gardiner et al. (2000, 2008). Conversely, when we refer to the functionalities implemented in this package, we use the name *fgr*] is designed to work in mono-specific even-aged stands (where all trees are very similar to the mean tree used for the calculations), the method of calculating the critical wind speeds (CWS) of damage for individual trees that is implemented in *fgr* is called Turning Moment Coefficient (*TMC*, Hale et al., 2012). The *TMC* method allows calculating the wind loading on trees of different sizes and species within a mixed stand. Hale et al. (2012) and Wellpott (2008) used data from stands that had not been recently thinned to define the turning moment coefficient $T_C$ which directly relates the mean wind speed at canopy top with the resulting maximum applied turning moment at tree base:
+
+\begin{align}
+M_{appl\_max} = T_C\cdot u(h)^2
+\end{align}
+$T_C$ was found to be very well correlated ($R^2 = 0.945$) with tree size:
+\begin{align}
+T_C = 111.7\cdot dbh^2 h
+\end{align}
+where *dbh* and *h* are in meters. Note that the regression value published in Hale et al. (2012) is incorrect and it should be 111.7.
+
+Two advantages of the *TMC* method are immediately evident. Firstly, the need for a Gust factor is removed, given that the maximum applied turning moment is calculated directly from the *mean* wind speed. For this reason, the edge and gap factors for the *TMC* method are calculated with a different function (`edge_gap_factor_fun`) from the *roughness* method. Secondly, the relationship between $T_C$ and tree competition allows modelling the impact of competition between trees and that of thinning around individual trees (see: Hale et al., 2012; Seidl et al., 2014; and Wellpott, 2008). Currently, of the competition indices described in Hale et al. (2012) only the distance-independent *BAL* (from the sum of the basal area of all trees within a stand larger than the subject tree) and the distand-dependent *Hegyi* (Hegyi, 1974) are implemented in the *TMC* method (Hale et al., 2012).
+
+As for the *roughness* method, for *TMC* the additional turning moment provided by the weight of the stem, crown, and snow (when present) is provided by the *Deflection Loading Factor* calculated with the `DLF_fun` function. This approach is well suited to the *TMC* method because it is not based on the notion that the wind loading is applied at zero displacement height, which would be impractical when dealing with individual trees. The total turning moment then becomes:
+
+\begin{align}
+M_{tot\_max} = DLF\cdot T_C\cdot u(h)^2
+\end{align}
+
+where *DLF* is the *Deflection Loading Factor*. When not using any competition indices, this is related to the size of the tree as:
+
+\begin{align}
+M_{tot\_max} = DLF\cdot u(h)^2 \cdot 111.7 \cdot dbh^2h
+\end{align}
+
+## The *fgr* R package *TMC* functions family
+The function currently implemented in the package is called `tc_zero_intercept_fun`. This function is calculated from the data in Hale et al. (2012) and it forces $T_C$ through zero when tree size tends to zero, as intuitively expected. The function arguments include the type of Competition Index (CI) used (either "None" when not used, "Bal" for the basal area CI, or "Heg" for the Hegyi CI).
+The other $T_C$ function included in the package is given for completeness. The `tc_intercept_fun` function was derived from the data in Hale et al. (2012) without forcing the regression through the origin.
+
+## The effect of spacing: the *Turning Moment Ratios* functions:
+In the *TMC* method the maximum applied turning moment ($M_{appl\_max}$) is calculated for individual trees based on tree size alone. That means that in the *TMC* method the calculation of $M_{appl\_max}$ is independent of spacing between trees, unlike in the *roughness* method where the effect of spacing is accounted for directly in the $M_{appl\_max}$ *roughness* formula (see the `BM_rou` function documentation). As a consequence, for the *TMC* approach the effect on $M_{appl\_max}$ of thinning a stand needs to be incorporated separately. This is because the wind loading on a tree is likely to be increased following a thinning, as the shelter effect from neighbouring trees is reduced with larger tree spacing (e.g. Albrecht et al., 2012; Gardiner et al., 1997). To obviate this issue, a *TMC_Ratio* was calculated with the following approach, which "borrows" from the *roughness* method:
+
+Firstly, $T_C$ was calculated for acclimated trees (i.e. pre-thinning) using Eq. 2
+Subsequently, Eq. 3 in the `Bending Moment Roughness` documentation was used to calculate the average ratio of mean wind loading on trees after and before thinning, for any wind speed:
+
+\begin{align}  
+M_{appl_mean}(z) = (d -z)\rho \biggl(\frac{Du_hk}{ln\frac{h-d}{z-0}}\biggr)^2
+\end{align}
+
+This yields the *TMC_Ratio*:
+
+\begin{align}
+TMC\_Ratio = \frac{M_{mean\_after}(z=0)}{M_{mean\_before}(z=0)} = \frac{d_{after}}{d_{before}} \biggl(\frac{D_{after}}{D_{before}}\biggr)^2 \Biggl(\frac{ln \biggl(\frac{h_{before} - d_{before}}{z_{0before}}\biggr)}{ln \biggl(\frac{h_{after} - d_{after}}{z_{0after}}\biggr)}\Biggr)^2
+\end{align}
+
+Where $d$ is the zero-plane displacement height and $z_0$ is the canopy roughness (Raupach, 1994. See the `Streamlining and Drag` functions documentation), and D (m) is the average spacing between trees. The ratio is for turning moments calculated at z = 0 (tree base) because Eq.1 is only valid at tree base. Also, no assumptions are made as to what height up the tree the wind loading acts. For even-aged stands, the TMC_Ratio approach assumes that all retained trees have the same ratio of turning moment before and after thinning. This is of course different for irregular stands, and it will largely depend on thinning practices and tree size distribution. Competition indices can be used in irregular stands to calculate changes in wind loading after thinning. This could be done with e.g. relative size ranking, or with information on distance from neighbouring trees (as done by Seidl et al. (2014) in their application of ForestGALES *TMC* with Hegyi CI within their iLand tree simulation platform).
+     
+When incorporating the effect of *TMC_Ratio*, Eq. 3 then becomes:
+
+\begin{align}
+M_{tot\_max} = DLF\cdot T_C\cdot u(h)^2 \cdot TMC\_Ratio
+\end{align}
+
+Note that *TMC_Ratio* is equal to 1 if there are no thinnings.
+
+## A simpler *TMC_Ratio*
+One difficulty of using Eq. 6 to model the effect of thinning is that it requires calculation of $d$ and $z_0$. These are a function of the CWS and as such their calculation requires an iterative procedure which can be computationally intensive when calculated for a large number of individual trees. During the development of the *TMC* method, *TMC_Ratio* was calculated for trees from a data set representative of the full range of British yield models (Edwards and Christie, 1981) for all the available species parametrised in ForestGALES. For all species but Scots pine and Japanese larch (and to a much lesser extent for Lodgepole pine and European larch), a clear linear relationship was found between *TMC_Ratio* and *Spacing_Ratio* (the ratio of average tree spacing after and before thinning):
+
+\begin{align}
+TMC\_Ratio = 0.99\cdot Spacing\_Ratio
+\end{align}
+
+When *TMC_Ratio* is higher than 1, the wind loading on the retained trees is higher after thinning than it was before. This is what is normally expected following a thinning, because of the reduced shelter from neighbouring trees. Conversely, a *TMC_Ratio* lower than 1 indicates a reduced wind loading on individual trees. This is due to a lower value of canopy roughness of the thinned forest stand, and it's more common at wider spacings. As shown in Raupach (1994), increasing the average spacing between trees (i.e. thinning a stand) always reduces the canopy area index $\Lambda$ (see the `Streamlining` documentation for an explanation of how this is used in ForestGALES). The effect of this on $z_0$ is complex, as the relationship between $z_0$ and $\Lambda$ is nonlinear, as shown in Figure 1C of Raupach (1994):
+
+```{r pressure, echo=FALSE, fig.cap="Lambda ($\\Lambda$) and roughness ($z_0$) relationship. From Raupach, 1994", out.width = '60%'}
+knitr::include_graphics("Raupach_1994_1C.png")
+```
+
+The *TMC_Ratio* is assumed to linearly tend towards the acclimated stand value (i.e. 1) following thinning. There are suggestions in the literature that stands thinned for less that 5 years have a higher probability of wind damage (Persson, 1975; Valinger and Friedman, 2011). For this, we assume that a stand has acclimated to the post-thinning conditions after 5 years (i.e. the *TMC_Ratio* value has returned to 1), altough the exact rate of re-acclimation is  a topic deserving of further in-depth study (Ruel et al., 2003).
+
+
+## Bibliography
+- Albrecht, A., Hanewinkel, M., Bauhus, J., Kohnle, U. 2012. How does silviculture affect storm damage in forests of south-western Germany? Results from empirical modeling based on long-term observations. European Journal of Forest Research, 131, 229-24.
+- Edwards PN and Christie JM, 1981. Yield Models For Forest Management. HMSO, London.
+- Hale SE, Gardiner BA, Wellpott A, Nicoll BC and Achim A, 2012. Wind loading of trees: influence of tree size and competition. Eur J For Res 131, 203-217. doi 10.1007/s10342-010-0448-2
+- Hegyi F (1974) A simulation model for managing jack pine stands. In: Fries J (ed) Growth models for tree and stand simulation. Royal College of Forestry, Stockholm, pp 74–90
+- Persson P, 1975. Windthrow in forests - Its causes and the effect of forestry measures. Research Note No. 36, Department of Forest Yield Research, Royal College of Forestry, Stockholm, Sweden.
+- Raupach, M.R. 1994 Simplified Expressions for vegetation roughness and zero-plane displacement as functions of canopy height and area index.Boundary-Layer Meteorology, 71, 211-216.
+- Ruel J-C, Larouche C and Achim A, 2003. Changes in root morphology after precommercial thinning in balsam fir stands. Can J For Res 33, 2452-2459.
+- Seidl R, Rammer W and Blennow K, 2014. Simulating wind disturbance impacts on forest landscapes: Tree-level heterogeneity matters. Environ Modell Softw 51, 1-11
+- Valinger E and Fridman J, 2011. Factors affecting the probability of windthrow at stand level as a result of Gudrun winter storm in southern Sweden. For Ecol Manage 262, 398-403.
+- Wellpott A, 2008. The stability of continuous cover forests. PhD Thesis, University of Edinburgh, Edinburgh, UK

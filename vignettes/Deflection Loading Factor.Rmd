@@ -1,0 +1,43 @@
+---
+title: "Deflection Loading Factor"
+author: "Locatelli, T. Hale, S. Nicoll, B. Gardiner, B."
+date: "`r Sys.Date()`"
+output: rmarkdown::pdf_document
+vignette: >
+  %\VignetteIndexEntry{Deflection Loading Factor}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+The deflection loading factor (DLF) represents the contribution to the total loading afforded by the overhanging mass of stem and crown (and snow, when present).  Deflection is calculated as a function of distance along the stem from the top of the tree.
+
+$DLF = \frac{total \,moment \,from \,wind \,and \,overhanging \,stem \,and \,crown}{moment \,from \,wind \,alone}$
+
+Hale et al. (2015) showed that DLF was a fairly constant value of 1.136. While this can be used in some instances as a practical simplification, the data were derived from snow-free crowns only and therefore do not allow to model snowy winter conditions. 
+A full calculation of DLF can be done using equations from Gardiner (1989), which describe DLF in engineering terms and allow the additional effect of snow as an extra weight on the crown. 
+
+## Second area moment of inertia
+The `i_fun` function makes use of the `diam_base_fun` function to calculate the second area moment of inertia at tree base ($\pi d_b^4/64$). This is used to determine the resistance of the stem to bending under the force of the wind and/or its weight.
+
+## Ratio of distance between tree top and vertical centroid of canopy
+The `r_fun` ratio simply calculates the ratio (scaled $(0,\ 1]$) of the distance from the top of tree and the centre of mass of the canopy (vertical centroid of the canopy). It is effectively a normalisation procedure of the length of the lever arm over tree height.
+
+## Applied force of the wind
+The `force_of_wind_fun` function is simply calculated by dividing the bending moment (calculated with the `bending_moment_rou` function for the roughness method, or with the `tc_zero_intercept` function for the TMC method) by the length of the lever arm (i.e. tree height - the height of the vertical centroid of the crown).
+
+## Tree deflection
+The `deflection_fun` function is used to calculate tree deflection on the horizontal plane of two points within the height of the tree: the centre of mass of the canopy, and at ¾ of the way down the stem, based on the assumption that the centre of mass of the stem is located at this height. By locating the distance of these two centres of mass from the vertical axis of the tree at rest, it is possible to then calculate the additional moments provided by the masses of the stem, crown, and snow (when applicable). This function is based on Eq. 5 of Gardiner (1989) and Eq. 5 of Gardiner (1992).
+
+## DLF
+Finally, the `DLF_calc` function calculates the 'Deflection Loading Factor', i.e. it converts the applied moment to the critical moment by including the additional moments provided by the effects of the weight of the stem, crown, and snow The analytical solution is obtained with a Maclaurin series. More information on the use of DLF can be found in the `Bending Moment Roughness` and the `Critical Wind Speeds` documentation.
+
+
+## Bibliography
+- Gardiner, B. 1989. Mechanical characteristics of Sitka spruce. Edinburgh: Forestry Commission. 11
+- Gardiner, B.A., 1992. Mathematical modelling of the static and dynamic characteristics of plantation trees. Mathematical modelling of forest ecosystems, pp.40-61.

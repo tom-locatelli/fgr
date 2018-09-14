@@ -1,0 +1,118 @@
+---
+title: "Critical Wind Speeds"
+author: "Locatelli, T. Hale, S. Nicoll, B. Gardiner, B."
+date: "`r Sys.Date()`"
+output: rmarkdown::pdf_document
+vignette: >
+  %\VignetteIndexEntry{Critical Wind Speeds}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+The Critical Wind Speeds (CWS) of damage (for stem breakage and for tree uprooting, or overturning) are the final output of the GALES^[Throughout the package documentation, we will use the name *ForestGALES* to refer to the model characteristics as described in e.g. Hale et al. (2015) or Gardiner et al. (2000, 2008). Conversely, when we refer to the functionalities implemented in this package, we use the name *fgr*] model (Gardiner et al., 2000). Their detailed formulas depend on the method used for the calculation of  CWS: the *roughness* method is applied for whole stands, while the *TMC* ("Turning moment coefficient") method is designed for individual trees within a stand.
+
+The approach to defining the CWS is similar for the two methods, and it is based on equating the total maximum turning moment ($M_{tot\_max}$, derived from the *roughness* and *TMC* formulas for the maximum applied turning moment ($M_{appl\_max}$)) with those for the critical breaking and overturning moments (Eq. 1 and 2, respectively, in the `Critical Resistive Moments` documentation):
+\begin{align}
+M_{crit\_break} = \frac{\pi}{32}f_{knot}MOR\cdot dbh^3 
+\end{align}
+for breakage, and:
+\begin{align}
+M_{crit\_over} = C_{reg}SW 
+\end{align}
+for overturning.
+
+where $M_{crit\_break}$ and $M_{crit\_over}$ are expressed in N m, dbh (m) is the stem diameter at breast height, MOR is the Modulus of Rupture (Pa), $f_{knot}$ is a factor to account for the presence of knots that reduces the MOR from the values obtained for knot free samples (as in e.g. Lavers, 1969), SW is the stem weight, and $C_{reg}$ (N m kg-1) is the regression coefficient, specific to species, soil type, and rooting depth (classified as shallow (< 80cm), deep (> 80cm)). *fgr* users also have the option of using the mean $C_{reg}$ value of the shallow and deep rooting values.
+
+## Critical Wind Speeds - the *roughness* method
+For the *roughness* method, $M_{appl\_max}$ is computed for the calculation of the CWS in the *fgr* R package using Eq. 7 in the `Bending Moment Roughness` documentation:
+
+\begin{align}
+M_{appl\_max}(tree\_base) = d\rho G\cdot u_*^2D^2
+\end{align}
+
+where $\rho$ is the air density, *G* is a factor that accounts for the compound effect of edge, gap, and gustiness (see the `Edge and Gap effects` documentation), $u_*$ is the friction velocity (see the `Streamlining and Drag` documentation for an explanation of how that is defined), and D is the average spacing between trees. 
+
+It should be noted that, in previous versions of ForestGALES, $M_{appl\_max}$ at a height *z* up the stem was calculated and adopted in the CWS calculations using the logarithmic wind profile in a formula akin to that in Eq. 5 of the `Bending Moment Roughness` documentation:
+
+\begin{align}
+M_{appl\_max}(z) = (d - z)\rho G\biggl(\frac{Du_hk}{ln\frac{h-d}{z_0}}\biggr)^2
+\end{align}
+
+where *d* is the zero-plane displacement (i.e. the height on the tree at which the wind loading is applied, as defined by Thom (1971)), $u_h$ is the mean hourly wind velocity at canopy top, *k* is von Karman's constant, *h* is tree height, and $z_0$ is the canopy's aerodynamic roughness. 
+This formula is still used in the *fgr* R package in the calculation of the Deflection Loading Factor (DLF, see the `Deflection Loading Factor` vignette). DLF allows converting $M_{appl\_max}$ to $M_{tot\_max}$ by incorporating the additional moment provided by the weight of the stem, crown, and snow.
+
+The friction velocity in Eq. 3 is converted to $u_h$ by using $\gamma$ (i.e. the $\frac{u_h}{u_*}$ ratio, see the `Streamlining and Drag` documentation) with the method of Raupach (1992, 1994).
+
+For the *roughness* method, the CWS for breakage is then obtained by equating Eq. 1 with Eq. 3 (with the addition of DLF), to yield:
+
+\begin{align}
+u(h)_{crit\_break} = \frac{1}{D}\sqrt{\frac{\pi \cdot MOR \cdot dbh^3 \cdot f_{knot}}{32 \rho G d DLF}} \cdot \gamma
+\end{align}
+
+Similarly, the CWs for overturning is obtained by equating Eq. 2 with Eq. 3:
+
+\begin{align}
+u(h)_{crit\_over} = \frac{1}{D}\sqrt{\frac{C_{reg} \cdot SW}{\rho G d DLF}} \cdot \gamma
+\end{align}
+
+It should be noted that there is one more difference between the calculations of the CWS adopted in the *fgr* R package (shown in Eq. 5 and 6) and those in the published literature (e.g. Hale et al., 2015):
+
+\begin{align}
+u(h)_{crit\_break} = \frac{1}{kD}\sqrt{\frac{\pi \cdot MOR \cdot dbh^3 \cdot f_{knot}}{32 \rho G d DLF}} \cdot ln\Bigl(\frac{h - d}{z_0}\Bigr)
+\end{align}
+
+\begin{align}
+u(h)_{crit\_over} = \frac{1}{kD}\sqrt{\frac{C_{reg} \cdot SW}{\rho G d DLF}} \cdot ln\Bigl(\frac{h - d}{z_0}\Bigr)
+\end{align}
+as DLF replaces the original $f_{CW}$ term.
+
+However, the main difference between the CWS formulas published in Hale et al. (2015) and those implemented in the *fgr* package consists in the derivation of $u_h$. In Eq. 5 and 6 ,$u_h$ is derived from $u_*$ using Raupach's $\gamma$-approach, while in the published formulas (Eq. 7 and 8) $u_h$ is calculated from the logarithmic profile, as in Eq. 1 of the `Streamlining and Drag` documentation:
+
+\begin{align}
+u_{(z)}= \frac {u_*}{k} ln\Bigl(\frac{z-d}{z_0}\Bigr)
+\end{align}
+
+## Critical Wind Speeds - the *TMC* method
+Calculation of the $M_{appl\_max}$ in the *TMC* method is much simpler than for the *roughness* method. Hale et al. (2012) have demonstrated that $M_{appl\_max}$ can be calculated for individual trees within a stand by multiplying the turning moment coefficient ($T_C$, very well correlated ($R^2 = 0.945$) with tree size) by the square of the mean wind speed at the top of the canopy ($u_h$), as shown in Eq. 1 in the `Turning coefficients functions` documentation (see there for a more in-depth discussion):
+\begin{align}
+M_{appl\_max} = T_C\cdot u(h)^2
+\end{align}
+$T_C$ can conveniently account for the effect of competition, as it can be computed in this *fgr* release for the distance-independent BAL competition index (CI), and the distance-dependent Hegyi CI (Hale et al., 2012). One of the strenghts of the *TMC* method is that it can model the effect of thinnings on the $M_{appl\_max}$ of individual trees, using the *TMC_Ratio* (see the `Turning Moment Ratios` documentation). To calculate the CWS for breakage and overturning with the *TMC* method, Eq. 1 and 2 are equated to Eq. 10. The effect of *TMC_Ratio* is also included. 
+For breaking, this yields:
+
+\begin{align}
+u(h)_{crit\_break} = \sqrt{\frac{\pi \cdot MOR \cdot dbh^3 \cdot f_{knot}}{32 T_C \cdot TMC\_Ratio \cdot f_{edge+gap} \cdot DLF}}
+\end{align}
+
+where $f_{edge+gap}$ is the combined effect of tree position relative to the upwind stand edge (and the nature of the edge), and of the size of the upwind gap (see the `Edge and Gap effects` documentation) on $M_{appl\_max}$.
+
+The CWS for overturning is calculated as follows:
+
+\begin{align}
+u(h)_{crit\_over} = \sqrt{\frac{C_{reg} \cdot SW}{T_C \cdot TMC\_Ratio \cdot f_{edge+gap} \cdot DLF}}
+\end{align}
+
+## Elevated Critical Wind Speeds
+Regardless of the method used for the calculation of the critical wind speeds of damage, $u(h)_{crit\_break}$ and $u(h)_{crit\_over}$ need to be converted to the corresponding wind speeds at 10m above zero plane displacement height ($u(d+10)_{crit}$) in order to use meteorological data to calculate the probabilities of damage and the associated return periods. This is done by assuming a logarithmic wind profile above the forest canopy:
+
+\begin{align}
+u(d+10)_{crit}=u(h)_{crit}\cdot \frac{ln\Bigl(\frac{10}{z_0}\Bigr)}{ln\Bigl(\frac{h-d}{z_0}\Bigr)}
+\end{align}
+
+## Probabilities of damage
+When information on the local wind climate is available, the risk of wind damage from breakage and overturning can be calculated from the elevated CWS. In *fgr* the local wind climate can be described either from the Weibull parameters (*A*: shape, also called "c"; and *k*: scale) of the distribution of mean wind speeds, or for forests in Great Britain using DAMS scores (Detailed Aspect Method of Scoring, Quine (2000)) if Weibull parameters are not known. DAMS scores are then converted to the Weibull A parameter, while a constant value is used for the k parameter (1.85). The probabilities are calculated with a Fisher-Tippett Type I (FT1) distribution. This particular distribution is used because the extremes of a dataset (e.g. mean hourly wind speeds in our case) following a Weibull distribution converge towards a FT1 distribution. In our case, we are obviously concerned with extremes that can generate the $M_{appl\_max}$ resulting in wind damage.
+
+## Bibliography
+- Gardiner, B.A., Peltola, H.M., Kellomaki, S. 2000. Comparison of two models for predicting the critical wind speeds required to damage coniferous trees. Ecological Modelling, 129, 1-23.
+- Hale SE, Gardiner BA, Wellpott A, Nicoll BC and Achim A, 2012. Wind loading of trees: influence of tree size and competition. Eur J For Res 131, 203-217. doi 10.1007/s10342-010-0448-2
+- Hale, S.A., Gardiner, B.A., Peace, A., Nicoll, B., Taylor, P., Pizzirani, S. 2015. Comparison and validation of three versions of a forest wind risk model. Environmental Modelling & Software, 68, 27-41.
+- Lavers, G.M., 1969. The Strength Properties of Timbers. For. Prod. Res. Lab., London
+- Raupach, M.R., 1992. Drag and drag partition on rough surfaces. Boundary Layer Meteorol. 60, 375–395.
+- Raupach, M.R. 1994 Simplified Expressions for vegetation roughness and zero-plane displacement as functions of canopy height and area index.Boundary-Layer Meteorology, 71, 211-216.
+- Thom, A.S., 1971. Momentum absorption by vegetation. Q. J. R. Meteorol. Soc. 97, 414–428.
