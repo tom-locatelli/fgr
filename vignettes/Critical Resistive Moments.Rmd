@@ -24,7 +24,7 @@ ForestGALES^[Throughout the package documentation, we will use the name *ForestG
 The resistance of a tree to stem breakage is based on the assumption that the wind-induced stress in the outer fibres of the tree stem remains constant between the base of the canopy and the stem base (Morgan and Cannell, 1994). This assumption simplifies the calculations as the stress only needs to be calculated e.g. at breast height (1.3 m). When this stress exceeds the species-specific modulus of rupture of green wood (MOR, Pa) the stem will break. MOR can be obtained from the literature, or experimentally derived from mechanical testing of small wood clears using e.g. a bench-top 3-point bending machine.
 Following Jones (1983), the critical breaking moment is calculated as:
 
-$M_{crit\_break} = \frac{\pi}{32}f_{knot}MOR\cdot dbh^3\tag{Eq. 1}$
+$M_{crit\_break} = \frac{\pi}{32}f_{knot}MOR\cdot dbh^3$
 
 where $M_{crit\_break}$ is expressed in N m, dbh (m) is the stem diameter at breast height, and $f_{knot}$ is a factor to account for the presence of knots that reduces the MOR from the values obtained for knot-free samples (as in e.g. Lavers, 1969). The value of $f_{knot}$ is scaled $(0,\ 1]$ and is species-specific.
 
