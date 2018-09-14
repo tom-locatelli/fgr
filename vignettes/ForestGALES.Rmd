@@ -3,6 +3,7 @@ title: "The ForestGALES wind risk model"
 author: "Locatelli, T. Hale, S. Nicoll, B. Gardiner, B."
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+self_contained: TRUE
 vignette: >
   %\VignetteIndexEntry{The ForestGALES wind risk model}
   %\VignetteEngine{knitr::rmarkdown}

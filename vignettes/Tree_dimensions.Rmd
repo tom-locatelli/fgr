@@ -3,6 +3,7 @@ title: "Tree Dimensions"
 author: "Locatelli, T. Hale, S. Nicoll, B. Gardiner, B."
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+self_contained: TRUE
 vignette: >
   %\VignetteIndexEntry{Tree Dimensions}
   %\VignetteEngine{knitr::rmarkdown}

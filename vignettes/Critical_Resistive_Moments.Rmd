@@ -3,6 +3,7 @@ title: "Critical Resistive Moments"
 author: "Locatelli, T. Hale, S. Nicoll, B. Gardiner, B."
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+self_contained: TRUE
 vignette: >
   %\VignetteIndexEntry{Critical moments}
   %\VignetteEngine{knitr::rmarkdown}

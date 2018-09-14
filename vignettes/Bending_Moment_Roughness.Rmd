@@ -3,6 +3,7 @@ title: "Bending Moment Roughness"
 author: "Locatelli, T. Hale, S. Nicoll, B. Gardiner, B."
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+self_contained: TRUE
 vignette: >
   %\VignetteIndexEntry{Bending Moment Roughness}
   %\VignetteEngine{knitr::rmarkdown}
