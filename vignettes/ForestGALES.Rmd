@@ -40,10 +40,6 @@ Where z is the height along the tree (m) and x(z) is the horizontal displacement
 
 ![Figure 1: Applied and resistive forces on a tree subject to strong winds (from Peltola, 2006)](Peltola_2006.PNG)
 
-```{r pressure, echo=FALSE, fig.cap="Figure 1: Applied and resistive forces on a tree subject to strong winds (from Peltola, 2006)", out.width = '100%'}
-knitr::include_graphics("Peltola_2006.PNG")
-```
-
 Tree resistance to breakage is based on the assumption that stress from wind loading in the outer fibres of the stem is constant along the height of the stem between the base of the canopy and the base of the tree (Morgan and Cannell, 1994). Following this, calculation of the stress can be performed at any height up the stem (e.g. at tree base, or at breast height, 1.3m). When the calculated stress exceeds the Modulus of Rupture of green wood, it is predicted that the tree stem will break (Peltola, 2006). It is known that the presence of wood knots can decrease stem strength (e.g. Lavers, 1969).
 
 Tree anchorage can be impaired when trees are shallow-rooted, as in poorly drained soils which are not favourable to the development of sinker roots or taproots, which can provide the tree with additional anchorage (Peltola, 2006). This often happens when a hardpan layer is present in the soil at shallow depths, raising the water table (Danjon, 2005). Under such circumstances, and in the absence of further constraints, trees devote their resources on the radial and lateral development of roots to improve anchorage (Nicoll et al., 2006; Ray and Nicoll, 1998). Coutts (1986) reports that when mechanically uprooting shallow-rooted Sitka spruce trees (*Picea sitchensis* (Bong) Carr.) under static forces, the root system component that provided most of the anchorage at maximum load was the windward roots. At high latitudes, ground frost can improve tree stability during winter months (Peltola et al., 1999). 

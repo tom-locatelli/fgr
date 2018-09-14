@@ -80,9 +80,7 @@ TMC\_Ratio = 0.99\cdot Spacing\_Ratio
 
 When *TMC_Ratio* is higher than 1, the wind loading on the retained trees is higher after thinning than it was before. This is what is normally expected following a thinning, because of the reduced shelter from neighbouring trees. Conversely, a *TMC_Ratio* lower than 1 indicates a reduced wind loading on individual trees. This is due to a lower value of canopy roughness of the thinned forest stand, and it's more common at wider spacings. As shown in Raupach (1994), increasing the average spacing between trees (i.e. thinning a stand) always reduces the canopy area index $\Lambda$ (see the `Streamlining` documentation for an explanation of how this is used in ForestGALES). The effect of this on $z_0$ is complex, as the relationship between $z_0$ and $\Lambda$ is nonlinear, as shown in Figure 1C of Raupach (1994):
 
-```{r pressure, echo=FALSE, fig.cap="Lambda ($\\Lambda$) and roughness ($z_0$) relationship. From Raupach, 1994", out.width = '60%'}
-knitr::include_graphics("Raupach_1994_1C.png")
-```
+![Lambda ($\\Lambda$) and roughness ($z_0$) relationship. From Raupach, 1994](Raupach_1994_1C.PNG)
 
 The *TMC_Ratio* is assumed to linearly tend towards the acclimated stand value (i.e. 1) following thinning. There are suggestions in the literature that stands thinned for less that 5 years have a higher probability of wind damage (Persson, 1975; Valinger and Friedman, 2011). For this, we assume that a stand has acclimated to the post-thinning conditions after 5 years (i.e. the *TMC_Ratio* value has returned to 1), altough the exact rate of re-acclimation is  a topic deserving of further in-depth study (Ruel et al., 2003).
 
