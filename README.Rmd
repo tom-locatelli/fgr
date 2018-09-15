@@ -1,0 +1,68 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
+
+# fgr
+
+*fgr* is the R release of the process-based wind risk model [ForestGALES](https://www.forestresearch.gov.uk/tools-and-resources/forest-planning-and-management-services/forestgales/) (see Hale et al., 2015 for a thorough description of the model). 
+ForestGALES was initially developed to calculate the risk of wind damage to unthinned or lightly thinned monospecific conifer plantations in the UK (Nicoll et al., 2006). The model has found favour in the scientific forestry community, and has been subsequently extended to allow wind risk modelling to other species not commercially grown in the UK (e.g. see Kamimura et al., 2008; Moore and Somerville, 1998; Ruel et al., 2000). It has been recently parametrised for *Eucalyptus globulus* (Locatelli et al., 2016). Current model development projects include incorporating other broadleaves (e.g. Beech, Birch, Oak). ForestGALES was submitted to a Global Sensitivity Analysis (Locatelli et al., 2017).
+The major recent development of ForestGALES, included in this *fgr* release, stems from the work of Hale et al. (2012), who developed a method to assess the risk to individual trees within a stand. This approach extends the application of ForestGALES to include heterogeneous stands, thinning practices, and between-trees competition with the use of competition indices.
+
+The goal of *fgr* is to provide forest scientists, landscape ecologists, modellers, and forest managers/planners with the ability to assess the vulnerability of forest stands to wind damage as part of their R workflow, and within a FOSS environment. Functions for the calculation of components of airflow modelling over canopies that are sued in *fgr* are made accessible to the user. 
+Extensive vignette documentation is provided in the `html_vignette` format. These vignettes aim at describing and occasionally clarifying the science upon which the model is built (tree stability and airflow near forest canopies), detail the mathematical formulas adopted in the simulations, provide examples of *fgr* applications using the package datasets, and include a small bibliography of the field of forest wind damage. To facilitate reading LaTeX mathematical notation used in the package documentation, the vignettes are also provided as a PDF manual.
+
+In the spirit of cooperation towards model application and development, *fgr* users are encouraged to provide suggestions for model improvement.
+We hope you enjoy using the package as much as we do developing ForestGALES and *fgr*!
+
+## Installation
+
+You can install *fgr* from github with:
+
+```{r gh-installation, eval = FALSE}
+# install.packages("devtools")
+devtools::install_github("tom-locatelli/fgr", build_vignettes = TRUE)
+```
+Note the use of `build_vignettes` to make sure all the package documentation is installed, as vignette are not automatically built on GitHub. 
+
+
+## Example
+
+This is a basic example which shows you how to calculate wind risk through the rotation of a Sitka spruce stand, using the `df_rou_2` dataset included in the package:
+
+```{r example}
+## basic example code
+library(fgr)
+fg_rou_v <- Vectorize(fg_rou)
+
+stand_id <- as.character(df_rou_2$stand_id)
+species <- as.character(df_rou_2$species)
+mean_ht <- df_rou_2$mean_ht
+mean_dbh <- df_rou_2$mean_dbh
+spacing <- df_rou_2$spacing
+full_output = 0
+weib_a <- df_rou_2$weib_a
+weib_k <- df_rou_2$weib_b
+
+out_rou <- as.data.frame(t(fg_rou_v(stand_id, species, mean_ht, mean_dbh, spacing, full_output, weib_a, weib_k)))
+#Note again the use of the vectorised function ("fg_rou_v""), and the transpose ("t") and data frame ("as.data.frame") functions to convert the list outputs of the fg_rou function to a data.frame object suitable for extracting a CSV file.
+```
+
+## Bibliography
+- Hale SE, Gardiner BA, Wellpott A, Nicoll BC and Achim A, 2012. Wind loading of trees: influence of tree size and competition. Eur J For Res 131, 203-217. doi 10.1007/s10342-010-0448-2
+- Hale, S.A., Gardiner, B.A., Peace, A., Nicoll, B., Taylor, P., Pizzirani, S. 2015. Comparison and validation of three versions of a forest wind risk model. Environmental Modelling & Software, 68, 27-41.
+- Kamimura, K., Gardiner, B.A., Kato, A., Hiroshima, T., Shiraishi, N. 2008. Developing a decision support approach to reduce wind damage risk - a case study on sugi (*Cryptomeria japonica* (L.f.) D.Don) forests in Japan. Forestry, 81, 429-445.
+- Locatelli, T., Gardiner, B.A., Tarantola, S., Nicoll, B., Bonnefond, J.-M., Garrigou, D., Kamimura, K., Patenaude, G. 2016. Modelling wind risk to Eucalyptus globulus (Labill.) stands. Forest Ecology and Management, 365, 159-173.
+- Locatelli, T., Tarantola, S., Gardiner, B. and Patenaude, G., 2017. Variance-based sensitivity analysis of a wind risk model-Model behaviour and lessons for forest modelling. Environmental Modelling & Software, 87, pp.84-109.
+- Moore, J. and Somerville, A. 1998. Assessing the risk of wind damage to plantation forests in New Zealand. New Zealand Forestry, 43, 25-29.
+- Nicoll, B.C., Gardiner, B.A., Rayner, B., Peace, A.J. 2006. Anchorage of coniferous trees in relation to species, soil type, and rooting depth. Canadian Journal of Forest Research-Revue Canadienne De Recherche Forestiere, 36, 1871-1883.
+- Ruel, J.C., Quine, C.P., Meunier, S., Suarez, J. 2000. Estimating windthrow risk in balsam fir stands with the ForestGALES model. Forestry Chronicle, 76, 329-337.
