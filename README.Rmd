@@ -37,7 +37,7 @@ Note the use of `build_vignettes` to make sure all the package documentation is 
 
 ## Example
 
-This is a basic example which shows you how to calculate wind risk through the rotation of a Sitka spruce stand, using the `df_rou_2` dataset included in the package:
+This is a basic example which shows you how to calculate wind risk through the rotation of a Sitka spruce stand, using the `df_rou_2` dataset included in the package. Note that the wrapper *fgr* function `fg_rou` is *Vectorized* to compute multiple lines of input.
 
 ```{r example}
 ## basic example code
