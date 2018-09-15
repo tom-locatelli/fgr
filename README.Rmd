@@ -37,21 +37,21 @@ Note the use of `build_vignettes` to make sure all the package documentation is 
 
 ## Example
 
-This is a basic example which shows you how to calculate wind risk through the rotation of a Sitka spruce stand, using the `df_rou_2` dataset included in the package. Note that the wrapper *fgr* function `fg_rou` is *Vectorized* to compute multiple lines of input.
+This is a basic example which shows you how to calculate wind risk through the rotation of a Sitka spruce stand, using the `df_rou` dataset included in the package. Note that the wrapper *fgr* function `fg_rou` is *Vectorized* to compute multiple lines of input.
 
 ```{r example}
 ## basic example code
-library(fgr)
+library("fgr")
 fg_rou_v <- Vectorize(fg_rou)
 
-stand_id <- as.character(df_rou_2$stand_id)
-species <- as.character(df_rou_2$species)
-mean_ht <- df_rou_2$mean_ht
-mean_dbh <- df_rou_2$mean_dbh
-spacing <- df_rou_2$spacing
+stand_id <- as.character(df_rou$stand_id)
+species <- as.character(df_rou$species)
+mean_ht <- df_rou$mean_ht
+mean_dbh <- df_rou$mean_dbh
+spacing <- df_rou$spacing
 full_output = 0
-weib_a <- df_rou_2$weib_a
-weib_k <- df_rou_2$weib_b
+weib_a <- df_rou$weib_a
+weib_k <- 1.85
 
 out_rou <- as.data.frame(t(fg_rou_v(stand_id, species, mean_ht, mean_dbh, spacing, full_output, weib_a, weib_k)))
 #Note again the use of the vectorised function ("fg_rou_v""), and the transpose ("t") and data frame ("as.data.frame") functions to convert the list outputs of the fg_rou function to a data.frame object suitable for extracting a CSV file.
