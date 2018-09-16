@@ -11,6 +11,7 @@ knitr::opts_chunk$set(
   fig.path = "README-"
 )
 ```
+# UNDERGOING BETA-TESTING. PLEASE DO NOT USE
 
 # fgr
 
