@@ -11,21 +11,21 @@ critical_moment_breakage(dbh, ht, cr_depth, mor, fknot)
 critical_moment_overturning(c_reg, stem_density, stem_vol)
 }
 \arguments{
-\item{dbh}{The dbh (cm) of a tree.}
+\item{dbh}{Diameter of the stem at breast height, i.e. 1.3m above the ground (cm). Depending on the method used ('roughness' or 'TMC') this can be either the arithmetic average of the dbh of all the trees in the stand, or the dbh of an individual tree.}
 
-\item{ht}{The height (m) of a tree.}
+\item{ht}{Tree height. Depending on the method used ('roughness' or 'TMC'), this can be either the mean tree in the stand, or each individual tree (m).}
 
-\item{cr_depth}{The length (m) of the tree crown.}
+\item{cr_depth}{Length of the tree crown (m).}
 
-\item{mor}{Modulus of Rupture (MPa) of green wood.}
+\item{mor}{Modulus of Rupture of green wood (MPa).}
 
-\item{fknot}{Knot factor. Dimensionless.}
+\item{fknot}{Knot factor (dimensionless).}
 
-\item{c_reg}{Regression coefficients (N m kg-1) of uprooting moment against stem weight.}
+\item{c_reg}{Regression coefficient of uprooting moment against stem weight (N m kg-1).}
 
-\item{stem_density}{Density (kg m-3) of green wood of the stem.}
+\item{stem_density}{Density of green wood of the stem (kg m-3).}
 
-\item{stem_vol}{Volume (m3) of the stem of the mean tree in the stand.}
+\item{stem_vol}{Volume of the tree stem of the mean tree in the stand (m3). For the roughness method, this is stem volume of the mean tree. For the TMC method, this is individual tree stem voume.}
 }
 \description{
 Calculate the critical moments for breakage and overturning

@@ -4,35 +4,35 @@
 \alias{bending_moment_rou}
 \title{Bending moment on a tree under wind loading}
 \usage{
-bending_moment_rou(dbh, ht, cr_width, cr_depth, spacing, dist_edge, gap_size,
-  uguess, n_drag, c_drag, drag_upper_limit)
+bending_moment_rou(dbh, ht, cr_width, cr_depth, spacing, dist_edge,
+  gap_size, uguess, n_drag, c_drag, drag_upper_limit, ro)
 }
 \arguments{
-\item{dbh}{The diameter (cm) of the stem measured at breast height.}
+\item{dbh}{Arithmetic average of the diameter of the stem at breast height, i.e. 1.3m above the ground, for all trees in the stand (cm).}
 
-\item{ht}{The height (m) of the tree.}
+\item{ht}{Mean tree height in the stand (m).}
 
-\item{cr_width}{The width (m) of the tree crown.}
+\item{cr_width}{Width of the tree crown (m).}
 
-\item{cr_depth}{The depth (m) of the tree crown.}
+\item{cr_depth}{Depth of the tree crown (m).}
 
-\item{spacing}{The spacing (m) between trees.}
+\item{spacing}{Mean distance between trees (m).}
 
-\item{dist_edge}{The distance (m) of the the tree from the upwind edge.}
+\item{dist_edge}{Distance of the the tree from the upwind edge (m).}
 
-\item{gap_size}{The length (m) of the upwind gap.}
+\item{gap_size}{Length of the upwind gap (m).}
 
-\item{uguess}{The speed (m s-1) of the wind.}
+\item{uguess}{Critical wind speed at canopy top calculated with the roughness or single-tree method (m s-1).}
 
-\item{n_drag}{The N parameter of the drag coefficient formula. Dimensionless.}
+\item{n_drag}{N parameter of the drag coefficient formula (dimensionless).}
 
-\item{c_drag}{The C parameter of the drag coefficient formula. Dimensionless.}
+\item{c_drag}{C parameter of the drag coefficient formula (dimensionless).}
 
-\item{drag_upper_limit}{The experimental maximum wind speed (m s-1) for calculations of the vaules of \code{n_drag} and \code{c_drag}.}
+\item{drag_upper_limit}{Maximum wind speed used during the experiments from which \code{n_drag} and \code{c_drag} were derived (m*s-1).}
 }
 \value{
-The bending moment (N) exerted on a tree by the applied wind force.
+Applied bending moment resulting from the wind load (N).
 }
 \description{
-Calculates the bending moment on a tree resulting from the force applied by the wind.
+Calculates the bending moment on a tree resulting from the load applied by the wind.
 }

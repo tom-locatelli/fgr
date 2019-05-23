@@ -1,12 +1,12 @@
 #' Calculate the critical moments for breakage and overturning
-#' @param dbh The dbh (cm) of a tree.
-#' @param ht The height (m) of a tree.
-#' @param cr_depth The length (m) of the tree crown.
-#' @param mor Modulus of Rupture (MPa) of green wood.
-#' @param fknot Knot factor. Dimensionless.
-#' @param c_reg Regression coefficients (N m kg-1) of uprooting moment against stem weight.
-#' @param stem_density Density (kg m-3) of green wood of the stem.
-#' @param stem_vol Volume (m3) of the stem of the mean tree in the stand.
+#' @param dbh Diameter of the stem at breast height, i.e. 1.3m above the ground (cm). Depending on the method used ('roughness' or 'TMC') this can be either the arithmetic average of the dbh of all the trees in the stand, or the dbh of an individual tree.
+#' @param ht Tree height. Depending on the method used ('roughness' or 'TMC'), this can be either the mean tree in the stand, or each individual tree (m).
+#' @param cr_depth Length of the tree crown (m).
+#' @param mor Modulus of Rupture of green wood (MPa).
+#' @param fknot Knot factor (dimensionless).
+#' @param c_reg Regression coefficient of uprooting moment against stem weight (N m kg-1).
+#' @param stem_density Density of green wood of the stem (kg m-3).
+#' @param stem_vol Volume of the tree stem of the mean tree in the stand (m3). For the roughness method, this is stem volume of the mean tree. For the TMC method, this is individual tree stem voume.
 #' @name Critical_Moments_Functions
 #' @title Critical Moments Functions
 NULL

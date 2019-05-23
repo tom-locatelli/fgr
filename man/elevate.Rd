@@ -7,16 +7,16 @@
 elevate(uh, z0, d, ht)
 }
 \arguments{
-\item{uh}{The critical wind speed (m s-1) calculated with the roughness or single-tree method.}
+\item{uh}{Critical wind speed at canopy top calculated with the roughness or single-tree method (m s-1).}
 
-\item{z0}{The roughness (m) of the canopy.}
+\item{z0}{Aerodynamic roughness length of the canopy (m).}
 
-\item{d}{The zero plane displacement height (m).}
+\item{d}{Zero plane displacement height of the canopy (m).}
 
-\item{ht}{The height of the tree.}
+\item{ht}{Height at which the critical wind speed is calculated (m). Note that this differs between the 'roughness' (stand mean height) and 'TMC' (1.05 * stand top height) methods.}
 }
 \value{
-A critical wind speed tht can be compared with met data.
+A critical wind speed that can be compared with met data.
 }
 \description{
 Converts the critical wind speeds to the wind speed 10 meters above zero plane displacement (for anemometers' data). The wind is assumed to follow a logarithmic profile.

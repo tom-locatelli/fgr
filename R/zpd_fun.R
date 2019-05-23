@@ -1,14 +1,14 @@
 #' Calculates the height of the zero plane displacement.
 #' @title Zero Plane Displacement Function.
-#' @param cr_width The width (m) of the canopy in windless conditions.
-#' @param cr_depth The length (m) of the canopy in windless conditions.
-#' @param spacing The spacing (m) between trees.
-#' @param uguess The speed (m s-1) of the wind.
-#' @param n_drag The N parameter of the drag coefficient formula. Dimensionless.
-#' @param c_drag The C parameter of the drag coefficient formula. Dimensionless.
-#' @param drag_upper_limit The experimental maximum wind speed (m*s-1) for calculations of the vaules of \code{n_drag} and \code{c_drag}.
-#' @param ht The height (m) of the tree.
-#' @return \code{zpd}, the height (m) of the zero plane displacement.
+#' @param cr_width Width of the canopy in windless conditions (m).
+#' @param cr_depth Length of the canopy in windless conditions (m).
+#' @param spacing Mean distance between trees (m).
+#' @param uguess Critical wind speed at canopy top calculated with the roughness or single-tree method (m s-1).
+#' @param n_drag N parameter of the drag coefficient formula (dimensionless).
+#' @param c_drag C parameter of the drag coefficient formula (dimensionless).
+#' @param drag_upper_limit Maximum wind speed used during the experiments from which \code{n_drag} and \code{c_drag} were derived (m*s-1).
+#' @param ht Height of the tree. In the 'roughness' method, this is stand mean height. In the TMC method, this is 'equivalent mean height' (m).
+#' @return \code{zpd}, the height of the zero plane displacement (m).
 zpd_fun <- function(cr_width, cr_depth, spacing, uguess, n_drag, c_drag, drag_upper_limit, ht) {
   zpd <- (1 - ((1 - exp( - sqrt(fgr_constants$cd1 * lambdacapital_fun(cr_width, cr_depth, spacing, uguess, n_drag, c_drag, drag_upper_limit)))) /
                  sqrt(fgr_constants$cd1 * lambdacapital_fun(cr_width, cr_depth, spacing, uguess, n_drag, c_drag, drag_upper_limit)))) * ht

@@ -1,20 +1,20 @@
 #' Calculate the Deflection Loading Factor to account for the additional moment provided by the weight of the stem, crown (and snow, when present)
-#' @param bm The applied bending moment resulting from the wind load
-#' @param ht The height (m) of a tree.
-#' @param dbh The dbh (cm) of a tree.
-#' @param cr_depth The length (m) of the tree crown.
-#' @param cr_width The width (m) of the tree crown.
-#' @param moe Modulus of Elasticity (MPa) of green wood.
-#' @param stem_density Density (kg m-3) of green wood of the stem.
-#' @param crown_density Density (kgm-3) of of the crown of the mean tree in the stand.
-#' @param stem_density Density (kg m-3) of green wood of the stem.
-#' @param stem_vol Volume (m3) of the stem of the mean tree in the stand.
-#' @param snow_depth Depth (cm) of layer of snow on tree crown.
-#' @param snow_density Density (kg m-3) of snow.
-#' @param x Height (m) along the tree stem where deflection is to be calculated.
-#' @param lever_arm Length (m) of the lever arm. Typically, it is equal tree height.
-#' @param fow Applied wind loading. In the \code{deflection_fun} function, it is a placeholder for the output of the \code{force_of_wind_fun} function.
-#' @param pull_height Height (m) along the tree stem where the wind loading is applied.
+#' @param bm Applied bending moment resulting from the wind load (N).
+#' @param ht Tree height. Depending on the method used ('roughness' or 'TMC'), this can be either the mean tree in the stand, or each individual tree (m).
+#' @param dbh Diameter of the stem at breast height, i.e. 1.3m above the ground (cm). Depending on the method used ('roughness' or 'TMC') this can be either the arithmetic average of the dbh of all the trees in the stand, or the dbh of an individual tree.
+#' @param cr_depth Length of the tree crown (m).
+#' @param cr_width Width of the tree crown (m).
+#' @param moe Modulus of Elasticity of green wood (MPa).
+#' @param stem_density Density of green wood of the stem (kg m-3).
+#' @param crown_density Density of of the tree crown (kg m-3).
+#' @param stem_density Density of green wood of the stem (kg m-3).
+#' @param stem_vol Volume of the tree stem of the mean tree in the stand (m3). For the roughness method, this is stem volume of the mean tree. For the TMC method, this is individual tree stem voume.
+#' @param snow_depth Depth of layer of snow on tree crown (cm).
+#' @param snow_density Density of snow (kg m-3).
+#' @param x Height along the tree stem where deflection is to be calculated (m).
+#' @param lever_arm Length of the lever arm (m). Typically, it is equal tree height.
+#' @param fow Applied wind loading in the \code{deflection_fun} function. It is a placeholder for the output of the \code{force_of_wind_fun} function.
+#' @param pull_height Height along the tree stem where the wind loading is applied (m).
 #' @name DFL_Functions
 #' @title Deflection Loading Factor Functions
 NULL

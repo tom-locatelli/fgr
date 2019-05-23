@@ -7,9 +7,9 @@
 max_gap_factor_fun(gap_size, ht)
 }
 \arguments{
-\item{gap_size}{The length (m) of the upwind gap.}
+\item{gap_size}{Length of the upwind gap (m).}
 
-\item{ht}{The height of the tree.}
+\item{ht}{Height of the tree. In the 'roughness' method, this is stand mean height. In the TMC method, this is 'equivalent mean height' (m).}
 }
 \value{
 \code{max_gap_factor}, the effect of gap alone on the maximum bending moment exerted by the wind on a tree.

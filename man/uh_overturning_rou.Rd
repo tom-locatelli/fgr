@@ -5,43 +5,44 @@
 \title{Critical wind speed for overturning - Roughness method.}
 \usage{
 uh_overturning_rou(mean_ht, mean_dbh, spacing, dist_edge, gap_size,
-  mean_cr_width, mean_cr_depth, moe, c_reg, n_drag, c_drag, drag_upper_limit,
-  stem_vol, stem_density, crown_density, snow_depth, snow_density, ro)
+  mean_cr_width, mean_cr_depth, moe, c_reg, n_drag, c_drag,
+  drag_upper_limit, stem_vol, stem_density, crown_density, snow_depth,
+  snow_density, ro)
 }
 \arguments{
-\item{mean_ht}{The height (m) of the mean tree in the stand.}
+\item{mean_ht}{Arithmetic mean height of the trees in the stand (m).}
 
-\item{mean_dbh}{The dbh (cm) of the mean tree in the stand.}
+\item{mean_dbh}{Mean dbh of all trees in the stand (cm). Dbh is diameter at breast height, measured at 1.3m above the ground. Essential.}
 
-\item{spacing}{The mean spacing (m) between trees in the stand.}
+\item{spacing}{Mean distance between trees (m).}
 
-\item{dist_edge}{Distance (m) of the mean tree from the upwind edge.}
+\item{dist_edge}{Distance from the upwind edge (m).}
 
-\item{gap_size}{Length (m) of the upwind gap.}
+\item{gap_size}{Length of the upwind gap (m).}
 
-\item{mean_cr_width}{Width (m) of the crown of the mean tree in the stand.}
+\item{mean_cr_width}{Width of the crown of the mean tree in the stand (m).}
 
-\item{mean_cr_depth}{Depth (m) of the crown of the mean tree in the stand.}
+\item{mean_cr_depth}{Depth of the crown of the mean tree in the stand (m).}
 
-\item{moe}{Modulus of Elasticity (MPa) of green wood.}
+\item{moe}{Modulus of Elasticity of green wood (MPa).}
 
-\item{c_reg}{Regression coefficients (N m kg-1) of uprooting moment against stem weight.}
+\item{c_reg}{Regression coefficients of uprooting moment against stem weight (N m kg-1).}
 
-\item{n_drag}{The N parameter of the drag coefficient formula. Dimensionless.}
+\item{n_drag}{N parameter of the drag coefficient formula (dimensionless).}
 
-\item{c_drag}{The C parameter of the drag coefficient formula. Dimensionless.}
+\item{c_drag}{C parameter of the drag coefficient formula (dimensionless).}
 
-\item{drag_upper_limit}{The experimental maximum wind speed (m*s-1) for calculations of the vaules of \code{n_drag} and \code{c_drag}.}
+\item{drag_upper_limit}{Maximum wind speed used during the experiments from which \code{n_drag} and \code{c_drag} were derived (m*s-1).}
 
-\item{stem_vol}{Volume (m3) of the stem of the mean tree in the stand.}
+\item{stem_vol}{Stem volume of the mean tree in the stand (m^3).}
 
-\item{stem_density}{Density (kg m-3) of green wood of the stem.}
+\item{stem_density}{Density of green wood of the stem (kg m-3).}
 
-\item{crown_density}{Density (kgm-3) of of the crown of the mean tree in the stand.}
+\item{crown_density}{Crown density of the mean tree in the stand (kg m-3).}
 
-\item{snow_depth}{Depth (cm) of layer of snow on tree crown.}
+\item{snow_depth}{Depth of layer of snow on tree crown (cm).}
 
-\item{snow_density}{Density (kg m-3) of snow.}
+\item{snow_density}{Density of snow (kg m-3).}
 
 \item{ro}{Air density (kg m-3).}
 }

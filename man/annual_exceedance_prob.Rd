@@ -7,11 +7,11 @@
 annual_exceedance_prob(u10, weib_a, weib_k)
 }
 \arguments{
-\item{u10}{The critical wind speed (m s-1) at anemometer's height.}
+\item{u10}{Critical wind speed at standard anemometer height, i.e. 10m above zero-plane displacement height (m s-1).}
 
-\item{weib_a}{The scale parameter of the Weibull distribution of local wind speeds.}
+\item{weib_a}{Scale parameter of the Weibull distribution for local wind speeds.}
 
-\item{weib_k}{The shape parameter of the Weibull distribution of local wind speeds.}
+\item{weib_k}{Shape parameter of the Weibull distribution for local wind speeds.}
 }
 \value{
 \code{aep}, i.e. the probability of exceeding the critical wind speed of damage.
