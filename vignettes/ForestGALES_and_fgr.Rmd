@@ -366,7 +366,7 @@ The possibility of fully customising *fgr* inputs provides us with the opportuni
 With either experimental knowledge of MOE and MOR throughout a rotation (e.g. from sampling thinned trees or applying acoustic tools on the standing stock), or with the use of modelled values, *fgr* users can refine the results of their simulations to incorporate the evolution of the stem's mechanical properties throughout a rotation, as done by Locatelli et al. (2018) in their modelling work with *Acacia* hybrid (*A. mangium X A. auricoliformis*). Following from the example above:
 ```
 stand_id <- as.character(df_rou$stand_id)
-date <- as.Date(df_rou$date)
+date <- df_rou$date
 species <- as.character(df_rou$species)
 mean_ht <- df_rou$mean_ht
 mean_dbh <- df_rou$mean_dbh
@@ -377,7 +377,7 @@ weib_k <- df_rou$weib_b
 moe <- df_rou$moe_by_age
 mor <- df_rou$mor_by_age
 
-out_rou_mech <- as.data.frame(t(fg_rou_v(stand_id, species, mean_ht, mean_dbh, spacing, full_output, weib_a, weib_k, moe = moe, mor = mor)))
+out_rou_mech <- as.data.frame(t(fg_rou_v(stand_id, date, species, mean_ht, mean_dbh, spacing, full_output, weib_a, weib_k, moe = moe, mor = mor)))
 
 library(tidyr)
 out_rou_mech_df <- unnest(out_rou_mech)
@@ -399,7 +399,7 @@ plot(df_rou$stand_age ~ out_rou_mech_df$u10_damage, type = "b", main = "CWS of d
 ```
 stand_id <- as.character(df_tmc$stand_id)
 tree_id <- as.character(df_tmc$tree_id)
-date <- as.Date(df_tmc$date)
+date <- df_tmc$date
 species <- as.character(df_tmc$species)
 tree_ht <- df_tmc$tree_ht
 dbh <- df_tmc$dbh
@@ -461,7 +461,7 @@ Using the `df_tmc_2` dataset as an example, be mindful that it is required to us
 ```
 stand_id <- as.character(df_tmc_2$stand_id)
 tree_id <- as.character(df_tmc_2$tree_id)
-date <- as.Date(df_tmc_2_date)
+date <- df_tmc_2$date
 species <- as.character(df_tmc_2$species)
 tree_ht <- df_tmc_2$tree_ht
 dbh <- df_tmc_2$dbh
@@ -492,7 +492,7 @@ For the purposes of this example, we are only concerned with the short output, s
 ```
 stand_id <- as.character(df_tmc_moses_gb$stand)
 tree_id <- as.character(df_tmc_moses_gb$treeid)
-date <- as.Date(df_tmc_moses_gb$date)
+date <- df_tmc_moses_gb$date
 species <- as.character(df_tmc_moses_gb$species)
 tree_ht <- df_tmc_moses_gb$tree_ht
 dbh <- df_tmc_moses_gb$dbh
@@ -529,7 +529,7 @@ Both the '*roughness*'and the *TMC* methods require that some tree dimensions ar
 Top stand height (e.g. the average height of the 100 trees per hectare with the largest dbh) is a commonly used measurement in forest management, especially in the UK.
 For the roughness method, ForestGALES calculates the CWS and risk of damage for the mean tree in the stand. For this, top height is converted into mean height using species-specificlinear regression coefficients derived from forest inventory data. Other mean tree characteristics are calculated from mean height. Therefore, knowledge of either top height or mean height is essential to calculate CWS with the roughness method.
 
-For the *TMC* method, the *equivalent mean height* of the stand is used in the calculations of aerodynamic roughness ($z_0$) and zero-plane displacement ($d$). The equivalent mean height is derived from stand top height (defined as above) to define the height of wind moment absorption at stand level. Stand's top height (increased by 5%) is also used in the `elevate` function to convert the critical wind speeds near canopy top calculated with the TMC method to the wind speed 10 meters above zero plane displacement (to compare with for anemometers' data, see the `Critical Wind Speeds` section). Stand mean height is used in the *TMC* method to calculate stand mean canopy parameters used in the calculations of the $z_0$ and $d$, for use in both the `elevate` function and in the *Turning Moment Ratios* `tm_ratio` function.
+For the *TMC* method, the *equivalent mean height* of the stand is used in the calculations of aerodynamic roughness ($z_0$) and zero-plane displacement ($d$). The equivalent mean height is derived from stand top height (defined as above) to define the height of wind moment absorption at stand level. Stand's top height (increased by 5%) is also used in the `elevate` function to convert the critical wind speeds near canopy top calculated with the TMC method to the wind speed 10 meters above zero plane displacement (to compare with for anemometers' data, see the `Critical Wind Speeds` section). Stand mean height is used in the *TMC* method to calculate stand mean canopy parameters used in the calculations of the $z_0$ and $d$, for use in both the `elevate` function and in the *Turning Moment Ratios* `tm_ratio` function. 
 
 ## Canopy width and canopy depth
 
@@ -730,10 +730,10 @@ M_{appl\_max} = T_C\cdot u(h)^2
 
 $T_C$ was found to be very well correlated ($R^2 = 0.945$) with tree size (Eq.19):
 \begin{align}
-T_C = 111.7\cdot dbh^2 h
+T_C = 111.604\cdot dbh^2 h
 \end{align}
 
-where *dbh* and *h* are in meters. Note that the regression value published in Hale et al. (2012) is incorrect and it should be 111.7.
+where *dbh* and *h* are in meters. Note that the regression value published in Hale et al. (2012) is incorrect and it should be 111.604.
 
 Two advantages of the *TMC* method are immediately evident. Firstly, the need for a Gust factor is removed, given that the maximum applied turning moment is calculated directly from the *mean* wind speed. For this reason, the edge and gap factors for the *TMC* method are calculated with a different function (`edge_gap_factor_fun`) from the *roughness* method. Secondly, the relationship between $T_C$ and tree competition allows modelling the impact of competition between trees and that of thinning around individual trees (see: Hale et al., 2012; Seidl et al., 2014; and Wellpott, 2008). Currently, of the competition indices described in Hale et al. (2012) only the distance-independent *bal* (from the sum of the basal area of all trees within a stand larger than the subject tree) and the distand-dependent *heg* (Hegyi, 1974) are implemented in the *TMC* method (Hale et al., 2012).
 
@@ -746,7 +746,7 @@ M_{tot\_max} = DLF\cdot T_C\cdot u(h)^2
 where *DLF* is the *Deflection Loading Factor*. When not using any competition indices, this is related to the size of the tree as in Eq. 21:
 
 \begin{align}
-M_{tot\_max} = DLF\cdot u(h)^2 \cdot 111.7 \cdot dbh^2h
+M_{tot\_max} = DLF\cdot u(h)^2 \cdot 111.604 \cdot dbh^2h
 \end{align}
 
 ## The *fgr* R package *TMC* functions family
@@ -954,6 +954,7 @@ Regardless of the method used for the calculation of the critical wind speeds of
 \begin{align}
 u(d+10)_{crit}=u(h)_{crit}\cdot \frac{ln\Bigl(\frac{10}{z_0}\Bigr)}{ln\Bigl(\frac{h-d}{z_0}\Bigr)}
 \end{align}
+The `elevate` function can be applied to a different height than the defaults for the `roughness` and the `TMC` methods by specifying a different calculation height with the `elev_ht` argument of the wrapper functions for the two methods.
 
 ## Probabilities of damage
 When information on the local wind climate is available, the risk of wind damage from breakage and overturning can be calculated from the elevated CWS. In *fgr* the local wind climate can be described either from the Weibull parameters (*A*: shape, also called "c"; and *k*: scale) of the distribution of mean wind speeds, or for forests in Great Britain using DAMS scores (Detailed Aspect Method of Scoring, Quine (2000)) if Weibull parameters are not known. DAMS scores are then converted to the Weibull A parameter, while a constant value is used for the k parameter (1.85). The probabilities are calculated with a Fisher-Tippett Type I (FT1) distribution. This particular distribution is used because the extremes of a dataset (e.g. mean hourly wind speeds in our case) following a Weibull distribution converge towards a FT1 distribution. In our case, we are obviously concerned with extremes that can generate the $M_{appl\_max}$ resulting in wind damage.

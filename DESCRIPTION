@@ -18,7 +18,7 @@ Author: Barry Gardiner[aut, cre],
         Bruce Nicoll[aut, cre],
         Tom Locatelli [cre, aut]
         Forest Research [cph]
-Maintainer: Forest Research <forestgales.support@forestry.gsi.gov.uk>
+Maintainer: Forest Research <forestgales.support@forestresearch.gov.uk>
 Description: The R version of the wind risk model ForestGALES. It contains
     both the traditional roughness method (for stand-level calculations), and
     the 'turning moment coefficient' version (for single-tree calculations).
