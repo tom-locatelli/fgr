@@ -7,7 +7,7 @@
 \alias{stem_volume_japanese_larch_japan}
 \title{Stem Volume Function.}
 \usage{
-stem_volume_fonweban(dbh, ht, species)
+stem_volume_fonweban(dbh, ht, species, species_parameters)
 
 stem_volume_quebec(dbh, ht, species)
 

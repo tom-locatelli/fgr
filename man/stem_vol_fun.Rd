@@ -4,10 +4,10 @@
 \alias{stem_vol_fun}
 \title{Stem Volume Function.}
 \usage{
-stem_vol_fun(species, dbh, ht)
+stem_vol_fun(species, dbh, ht, species_parameters)
 }
 \arguments{
-\item{species}{Tree species.}
+\item{species}{Tree species. If working with a non-default species (i.e. named "U^"), the stem_volume_fonweban function to calulate volume is adopted.}
 
 \item{dbh}{Diameter of the stem at breast height, i.e. 1.3m above the ground (cm). Depending on the method used ('roughness' or 'TMC') this can be either the arithmetic average of the dbh of all the trees in the stand, or the dbh of an individual tree.}
 

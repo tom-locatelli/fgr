@@ -5,6 +5,7 @@
 \alias{tc_intercept_fun}
 \alias{tc_zero_intercept_fun}
 \alias{tc_zero_intercept_new_bal_fun}
+\alias{tc_zero_intercept_fun_balBA}
 \title{Turning Moment Coefficient Functions}
 \usage{
 tc_intercept_fun(dbh, ht, ci, ci_value)
@@ -12,6 +13,8 @@ tc_intercept_fun(dbh, ht, ci, ci_value)
 tc_zero_intercept_fun(dbh, ht, ci, ci_value)
 
 tc_zero_intercept_new_bal_fun(dbh, ht, ci, ci_value)
+
+tc_zero_intercept_fun_balBA(dbh, ht, ci, ci_value)
 }
 \arguments{
 \item{dbh}{Diameter of the stem at breast height, i.e. 1.3m above the ground (cm).}

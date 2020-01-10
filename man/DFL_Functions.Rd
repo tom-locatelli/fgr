@@ -10,9 +10,10 @@
 \title{Deflection Loading Factor Functions}
 \usage{
 dlf_fun(bm, ht, cr_depth, cr_width, stem_vol, dbh, moe, crown_density,
-  stem_density, snow_depth, snow_density)
+  stem_density, snow_depth, snow_density, fgr_constants)
 
-deflection_fun(x, lever_arm, fow, dbh, ht, cr_depth, pull_height, moe)
+deflection_fun(x, lever_arm, fow, dbh, ht, cr_depth, pull_height, moe,
+  fgr_constants)
 
 force_of_wind_fun(bm, ht, cr_depth)
 

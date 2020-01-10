@@ -4,7 +4,8 @@
 \alias{edge_gap_factor_fun}
 \title{Edge Gap Factor.}
 \usage{
-edge_gap_factor_fun(spacing, equivalent_mean_ht, dist_edge, gap_size)
+edge_gap_factor_fun(spacing, equivalent_mean_ht, dist_edge, gap_size,
+  fgr_constants)
 }
 \arguments{
 \item{spacing}{Mean distance between trees (m).}

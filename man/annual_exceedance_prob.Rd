@@ -4,7 +4,7 @@
 \alias{annual_exceedance_prob}
 \title{Annual Exceedance Probability}
 \usage{
-annual_exceedance_prob(u10, weib_a, weib_k)
+annual_exceedance_prob(u10, weib_a, weib_k, fgr_constants)
 }
 \arguments{
 \item{u10}{Critical wind speed at standard anemometer height, i.e. 10m above zero-plane displacement height (m s-1).}

@@ -10,12 +10,12 @@ uh_overturning_tmc(tree_ht, dbh, cr_depth, cr_width, spacing_current,
   spacing_before, years_since_thin, dist_edge, gap_size, moe, c_reg,
   stem_vol, stem_density, crown_density, snow_depth, snow_density, ci,
   ci_value, n_drag, c_drag, drag_upper_limit, equivalent_mean_ht,
-  stand_cr_depth, stand_cr_width)
+  stand_cr_depth, stand_cr_width, fgr_constants)
 
 uh_overturning_tmc_tmr_simple(tree_ht, dbh, cr_depth, cr_width,
   spacing_current, spacing_before, years_since_thin, dist_edge, gap_size,
   equivalent_mean_ht, moe, c_reg, stem_vol, stem_density, crown_density,
-  snow_depth, snow_density, ci, ci_value)
+  snow_depth, snow_density, ci, ci_value, fgr_constants)
 }
 \arguments{
 \item{tree_ht}{Individual tee height (m).}

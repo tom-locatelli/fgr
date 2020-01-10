@@ -4,14 +4,16 @@
 \alias{fg_tmc}
 \title{ForestGALES - Single-tree (TMC) method.}
 \usage{
-fg_tmc(stand_id, tree_id, date, species, tree_ht, dbh, spacing_current,
-  predominant_species, stand_mean_ht, stand_mean_dbh, stand_top_ht,
-  full_output = 1, weib_a = NA, weib_k = NA, ci = NA,
-  ci_value = NA, cr_width = NA, cr_depth = NA, stand_cr_width = NA,
+fg_tmc(stand_id, tree_id, date = NA, species, tree_ht, dbh,
+  spacing_current, predominant_species = species, stand_mean_ht,
+  stand_mean_dbh, stand_top_ht, full_output = 1, weib_a = NA,
+  weib_k = NA, ci = NA, ci_value = NA, elev_ht = NA,
+  cr_width = NA, cr_depth = NA, stand_cr_width = NA,
   stand_cr_depth = NA, soil_group = NA, rooting = NA,
   dist_edge = NA, gap_size = NA, spacing_before = NA,
-  years_since_thin = NA, moe = NA, mor = NA, fknot = NA,
-  stem_vol = NA, crown_vol = NA, stem_density = NA,
+  years_since_thin = NA, species_parameters = fgr:::species_parameters,
+  fgr_constants = fgr:::fgr_constants, moe = NA, mor = NA,
+  fknot = NA, stem_vol = NA, crown_vol = NA, stem_density = NA,
   crown_density = NA, c_reg = NA, c_drag = NA, n_drag = NA,
   drag_upper_limit = NA, snow_depth = NA, snow_density = NA,
   ro = NA, x = NA, y = NA, z = NA, dams = NA)
@@ -31,7 +33,7 @@ fg_tmc(stand_id, tree_id, date, species, tree_ht, dbh, spacing_current,
 
 \item{spacing_current}{Current mean spacing of trees in the stand (m). Essential.}
 
-\item{predominant_species}{Predominant species in the stand.}
+\item{predominant_species}{Predominant species in the stand. Defaults to \code{species}.}
 
 \item{stand_mean_ht}{Arithmetic mean height of the trees in the stand (m). Essential.}
 
@@ -48,6 +50,8 @@ fg_tmc(stand_id, tree_id, date, species, tree_ht, dbh, spacing_current,
 \item{ci}{Competition Index (\code{BAL}, \code{Hegyi}, \code{None}) used.}
 
 \item{ci_value}{Value of \code{ci}.}
+
+\item{elev_ht}{The height at which the elevated critical wind speed is calculated (m). For the TMC method, this defaults to 1.05 * stand top height}
 
 \item{cr_width}{Width of the tree crown (m).}
 
@@ -68,6 +72,10 @@ fg_tmc(stand_id, tree_id, date, species, tree_ht, dbh, spacing_current,
 \item{spacing_before}{Mean spacing of trees in the stand before any thinning (m).}
 
 \item{years_since_thin}{Number of years since most recent thinning.}
+
+\item{species_parameters}{Data.frame covering all species-specific parameters. Defaults to fgr Internal Data species paramters data.frame. If specified by the user, it can have as many or as few species (i.e. rows) as required. It is recommended that when working with user-defined species, stem volume is specified and provided as an input (see below in input list). When this is not possible, stem volume is calculated with Eq. 4 of Fonweban et al. 2012. In order to allow this, letter codes for User-defined species must begin with a capital "U" for the model to recognise that the Fonweban et al. formula needs applied to calculate stem volume.}
+
+\item{fgr_constants}{Data.frame including all constants required for model execution. Defaults to fgr Internal Data fgr constants data.frame. these include entities that can be individually supplied to the model (e.g. ro, the air density, and snow density - see below in input list), or entities that qould not normally require modification (e.g. constants used in the calculation of the Deflection Loading Factor, the Annual Exceedance Probability, the Edge, Gap, and Gust Factors, aerodynamic quantities such as zpd, z0, and gammasolved - but even von Karman's and the gravitational constants can be modified!)}
 
 \item{moe}{Modulus of Elasticity of green wood (MPa). Advanced Input.}
 

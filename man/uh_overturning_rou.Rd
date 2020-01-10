@@ -7,7 +7,7 @@
 uh_overturning_rou(mean_ht, mean_dbh, spacing, dist_edge, gap_size,
   mean_cr_width, mean_cr_depth, moe, c_reg, n_drag, c_drag,
   drag_upper_limit, stem_vol, stem_density, crown_density, snow_depth,
-  snow_density, ro)
+  snow_density, ro, fgr_constants)
 }
 \arguments{
 \item{mean_ht}{Arithmetic mean height of the trees in the stand (m).}

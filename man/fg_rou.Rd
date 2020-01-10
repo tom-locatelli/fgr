@@ -4,10 +4,12 @@
 \alias{fg_rou}
 \title{ForestGALES - Roughness method.}
 \usage{
-fg_rou(stand_id, date, species, mean_ht, mean_dbh, spacing,
+fg_rou(stand_id, date = NA, species, mean_ht, mean_dbh, spacing,
   full_output = 1, weib_a = NA, weib_k = NA, top_ht = NA,
-  mean_cr_width = NA, mean_cr_depth = NA, soil_group = NA,
-  rooting = NA, new_edge = NA, gap_size = NA, moe = NA, mor = NA,
+  elev_ht = NA, mean_cr_width = NA, mean_cr_depth = NA,
+  soil_group = NA, rooting = NA, new_edge = NA, gap_size = NA,
+  species_parameters = fgr:::species_parameters,
+  fgr_constants = fgr:::fgr_constants, moe = NA, mor = NA,
   fknot = NA, stem_vol = NA, crown_vol = NA, stem_density = NA,
   crown_density = NA, c_reg = NA, c_drag = NA, n_drag = NA,
   drag_upper_limit = NA, snow_depth = NA, snow_density = NA,
@@ -34,6 +36,8 @@ fg_rou(stand_id, date, species, mean_ht, mean_dbh, spacing,
 
 \item{top_ht}{The height of the dominant tree(s) in the stand (m). Essential (unless \code{mean_ht} is provided).}
 
+\item{elev_ht}{The height at which the elevated critical wind speed is calculated (m). For the roughness method, this defaults to mean tree height}
+
 \item{mean_cr_width}{Width of the crown of the mean tree in the stand (m).}
 
 \item{mean_cr_depth}{Length of the crown of the mean tree in the stand (m).}
@@ -45,6 +49,10 @@ fg_rou(stand_id, date, species, mean_ht, mean_dbh, spacing,
 \item{new_edge}{Switch to toggle between green upwind edge (0) or brown upwind edge (1)}
 
 \item{gap_size}{Length of the upwind gap (m).}
+
+\item{species_parameters}{Data.frame covering all species-specific parameters. Defaults to fgr Internal Data species paramters data.frame. If specified by the user, it can have as many or as few species (i.e. rows) as required. It is recommended that when working with user-defined species, stem volume is specified and provided as an input (see below in input list). When this is not possible, stem volume is calculated with Eq. 4 of Fonweban et al. 2012. In order to allow this, letter codes for User-defined species must begin with a capital "U" for the model to recognise that the Fonweban et al. formula needs applied to calculate stem volume.}
+
+\item{fgr_constants}{Data.frame including all constants required for model execution. Defaults to fgr Internal Data fgr constants data.frame. these include entities that can be individually supplied to the model (e.g. ro, the air density, and snow density - see below in input list), or entities that qould not normally require modification (e.g. constants used in the calculation of the Deflection Loading Factor, the Annual Exceedance Probability, the Edge, Gap, and Gust Factors, aerodynamic quantities such as zpd, z0, and gammasolved - but even von Karman's and the gravitational constants can be modified!)}
 
 \item{moe}{Modulus of Elasticity of green wood (MPa). Advanced Input.}
 
