@@ -12,34 +12,34 @@ tm_ratio_simple(spacing_before, spacing_current, years_since_thin)
 
 tm_ratio_simple_ci(spacing_before, spacing_current, years_since_thin, ci)
 
-tm_ratio(spacing_before, spacing_current, years_since_thin, cr_width, cr_depth,
-  uguess, n_drag, c_drag, drag_upper_limit, ht)
+tm_ratio(spacing_before, spacing_current, years_since_thin, cr_width,
+  cr_depth, uguess, n_drag, c_drag, drag_upper_limit, ht)
 
 tm_ratio_ci(spacing_before, spacing_current, years_since_thin, cr_width,
   cr_depth, uguess, n_drag, c_drag, drag_upper_limit, ht, ci)
 }
 \arguments{
-\item{spacing_before}{The mean spacing (m) between trees in the stand before any thinning.}
+\item{spacing_before}{Mean spacing of trees in the stand before any thinning (m).}
 
-\item{spacing_current}{The current mean spacing (m) between trees in the stand.}
+\item{spacing_current}{Current mean spacing of trees in the stand (m).}
 
-\item{years_since_thin}{The number of years after the latest thinning.}
+\item{years_since_thin}{Number of years after the latest thinning.}
 
-\item{ci}{Competition Index (\code{BAL}, \code{Hegyi}) used. Can be \code{None}.}
+\item{ci}{Competition Index (\code{bal}, \code{heg}, \code{none}) used.}
 
-\item{cr_width}{The width (m) of the tree crown.}
+\item{cr_width}{Width of the crown of the "equivalent mean tree" in the stand (m).}
 
-\item{cr_depth}{The length (m) of the tree crown.}
+\item{cr_depth}{Length of the crown of the "equivalent mean tree" in the stand (m).}
 
-\item{uguess}{The speed (m s-1) of the wind.}
+\item{uguess}{Critical wind speed at canopy top calculated with the roughness or single-tree method (m s-1).}
 
-\item{n_drag}{The N parameter of the drag coefficient formula. Dimensionless.}
+\item{n_drag}{N parameter of the drag coefficient formula (dimensionless).}
 
-\item{c_drag}{The C parameter of the drag coefficient formula. Dimensionless.}
+\item{c_drag}{C parameter of the drag coefficient formula (dimensionless).}
 
-\item{drag_upper_limit}{The experimental maximum wind speed (m*s-1) for calculations of the vaules of \code{n_drag} and \code{c_drag}.}
+\item{drag_upper_limit}{Maximum wind speed used during the experiments from which \code{n_drag} and \code{c_drag} were derived (m*s-1).}
 
-\item{ht}{The height (m) of the tree.}
+\item{ht}{Equivalent mean stand height: the level in the stand responsible for most of the momentum absorption (m).}
 }
 \description{
 Calculate the ratio between the turning moment coefficient before and after thinning in the stand.

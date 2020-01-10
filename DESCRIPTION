@@ -1,18 +1,18 @@
 Package: fgr
 Type: Package
 Title: R Version of the ForestGALES wind risk model
-Version: 0.0.0.9000
-Date: 2018-04-19
+Version: 0.0.0.9009
+Date: 2020-01-10
 Authors@R: c(person("Tom", "Locatelli", role = c("cre", "aut"),
-                     email = "tom.locatelli@forestry.gsi.gov.uk"),
+                     email = "tom.locatelli@forestresearch.gov.uk"),
               person("Barry", "Gardiner", role = c("aut", "cre"),
-                     email = "barry.gardiner@efi.int"),
+                     email = "barry.gardiner@inra.fr"),
               person("Sophie", "Hale", role = c("aut", "cre"),
-                     email = "sophie.hale@forestry.gsi.gov.uk"),
+                     email = "sophie.hale@tom.locatelli@forestresearch.gov.uk"),
               person("Bruce", "Nicoll", role = c("aut", "cre"),
-                     email = "bruce.nicoll@forestry.gsi.gov.uk"),
+                     email = "bruce.nicoll@tom.locatelli@forestresearch.gov.uk"),
               person("Forest", "Research", role = "cph",
-                     email = "forestgales.support@forestry.gsi.gov.uk"))       
+                     email = "forestgales.support@tom.locatelli@forestresearch.gov.uk"))       
 Author: Barry Gardiner[aut, cre],
         Sophie Hale [aut, cre],
         Bruce Nicoll[aut, cre],
@@ -45,7 +45,7 @@ BugReports: https://github.com/tom-locatelli/fgr/issues
 License: CC BY-NC-ND 4.0
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
 Suggests: knitr,
-    rmarkdown
+    rmarkdown, tidyr, Rcpp
 VignetteBuilder: knitr

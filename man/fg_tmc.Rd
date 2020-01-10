@@ -4,93 +4,96 @@
 \alias{fg_tmc}
 \title{ForestGALES - Single-tree (TMC) method.}
 \usage{
-fg_tmc(stand_id, tree_id, species, tree_ht, dbh, spacing_current,
-  predominant_species, stand_mean_ht, stand_top_ht, stand_mean_dbh,
-  full_output = 1, weib_a = NA, weib_k = NA, ci = NA, ci_value = NA,
-  cr_width = NA, cr_depth = NA, stand_cr_width = NA,
-  stand_cr_depth = NA, soil_group = NA, rooting = NA, dist_edge = NA,
-  gap_size = NA, spacing_before = NA, years_since_thin = NA, moe = NA,
-  mor = NA, fknot = NA, stem_vol = NA, crown_vol = NA,
-  stem_density = NA, crown_density = NA, c_reg = NA, c_drag = NA,
-  n_drag = NA, drag_upper_limit = NA, snow_depth = NA,
-  snow_density = NA, ro = NA, x = NA, y = NA, z = NA, dams = NA)
+fg_tmc(stand_id, tree_id, date, species, tree_ht, dbh, spacing_current,
+  predominant_species, stand_mean_ht, stand_mean_dbh, stand_top_ht,
+  full_output = 1, weib_a = NA, weib_k = NA, ci = NA,
+  ci_value = NA, cr_width = NA, cr_depth = NA, stand_cr_width = NA,
+  stand_cr_depth = NA, soil_group = NA, rooting = NA,
+  dist_edge = NA, gap_size = NA, spacing_before = NA,
+  years_since_thin = NA, moe = NA, mor = NA, fknot = NA,
+  stem_vol = NA, crown_vol = NA, stem_density = NA,
+  crown_density = NA, c_reg = NA, c_drag = NA, n_drag = NA,
+  drag_upper_limit = NA, snow_depth = NA, snow_density = NA,
+  ro = NA, x = NA, y = NA, z = NA, dams = NA)
 }
 \arguments{
-\item{stand_id}{The stand identifier. Essential.}
+\item{stand_id}{Stand identifier. Essential.}
 
-\item{tree_id}{The tree identifier. Essential.}
+\item{tree_id}{Tree identifier. Essential.}
 
-\item{species}{The tree species under investigation. Essential.}
+\item{date}{Date of wind damage risk assessment. Optional (but useful!).}
 
-\item{tree_ht}{The height (m) of a tree. Essential.}
+\item{species}{Tree species under investigation. Essential.}
 
-\item{dbh}{The dbh (cm) of a tree. Essential.}
+\item{tree_ht}{Individual tree height (m). Essential.}
 
-\item{spacing_current}{The current mean spacing (m) between trees in the stand. Essential.}
+\item{dbh}{Diameter of the stem at breast height, i.e. 1.3m above the ground (cm). Essential.}
 
-\item{predominant_species}{The predominant species in the stand.}
+\item{spacing_current}{Current mean spacing of trees in the stand (m). Essential.}
 
-\item{stand_mean_ht}{Height (m) of the mean tree in the stand. Essential (unless \code{stand_mean_ht} is provided).}
+\item{predominant_species}{Predominant species in the stand.}
 
-\item{stand_top_ht}{Height (m) of the dominant tree(s) in the stand. Essential (unless \code{stand_top_ht} is provided).}
+\item{stand_mean_ht}{Arithmetic mean height of the trees in the stand (m). Essential.}
 
-\item{stand_mean_dbh}{Dbh (cm) of the dominant tree(s) in the stand. Essential.}
+\item{stand_mean_dbh}{Mean dbh of all trees in the stand (cm) - arithmetic average. Dbh is diameter at breast height, measured at 1.3m above the ground. Essential.}
 
-\item{full_output}{Switch between full and minimal outputs.}
+\item{stand_top_ht}{Height of the dominant tree(s) in the stand (m). Essential.}
 
-\item{weib_a}{The scale parameter of the Weibull distribution of local wind speeds.}
+\item{full_output}{Switch between full and basic outputs.}
 
-\item{weib_k}{The shape parameter of the Weibull distribution of local wind speeds.}
+\item{weib_a}{Scale parameter of the Weibull distribution for local wind speeds.}
 
-\item{ci}{Competition Index (\code{BAL}, \code{Hegyi}) used. Can be \code{None}.}
+\item{weib_k}{Shape parameter of the Weibull distribution for local wind speeds.}
+
+\item{ci}{Competition Index (\code{BAL}, \code{Hegyi}, \code{None}) used.}
 
 \item{ci_value}{Value of \code{ci}.}
 
-\item{cr_width}{The width (m) of the tree crown.}
+\item{cr_width}{Width of the tree crown (m).}
 
-\item{cr_depth}{The length (m) of the tree crown.}
+\item{cr_depth}{Length of the tree crown (m).}
 
-\item{stand_cr_width}{The width (m) of the crown of the mean tree in the stand.}
+\item{stand_cr_width}{Width of the crown of the mean tree in the stand (m).}
 
-\item{stand_cr_depth}{The length (m) of the crown of the mean tree in the stand.}
+\item{stand_cr_depth}{Length of the crown of the mean tree in the stand (m).}
 
-\item{soil_group}{The soil type identifier.}
+\item{soil_group}{Soil group identifier (1 = freely draining mineral soils; 2 = gleyed mineral soils; 3 = peaty mineral soils; 4 = deep peats).}
 
-\item{rooting}{The rooting depth class (1 = Shallow, 2 = Deep, 3 = Medium).}
+\item{rooting}{Rooting depth class (1 = Shallow, 2 = Deep, 3 = Medium).}
 
-\item{dist_edge}{Distance (m) of the mean tree from the upwind edge.}
+\item{dist_edge}{Distance of tree from the upwind edge (m).}
 
-\item{gap_size}{Length (m) of the upwind gap.}
+\item{gap_size}{Length of the upwind gap (m).}
 
-\item{spacing_before}{The mean spacing (m) between trees in the stand before any thinning.}
+\item{spacing_before}{Mean spacing of trees in the stand before any thinning (m).}
 
-\item{years_since_thin}{The number of years after the latest thinning.}
+\item{years_since_thin}{Number of years since most recent thinning.}
 
-\item{moe}{Modulus of Elasticity (MPa) of green wood. Advanced Input.}
+\item{moe}{Modulus of Elasticity of green wood (MPa). Advanced Input.}
 
-\item{mor}{Modulus of Rupture (MPa) of green wood. Advanced Input.}
+\item{mor}{Modulus of Rupture of green wood (MPa). Advanced Input.}
 
-\item{fknot}{Knot factor. Dimensionless. Advanced Input.}
+\item{fknot}{Knot factor (dimensionless). Advanced Input.}
 
-\item{stem_vol}{Volume (m3) of the stem of the tree. Advanced Input.}
+\item{stem_vol}{Individual tree stem volume (m3). Advanced Input.}
 
-\item{crown_vol}{Volume (m3) of the tree crown. Advanced Input.}
+\item{crown_vol}{Volume of the crown of individual trees (m3). Advanced Input.}
 
-\item{stem_density}{Density (kg m-3) of green wood of the stem. Advanced Input.}
+\item{stem_density}{Density of green wood of the stem (kg m-3). Advanced Input.}
 
-\item{crown_density}{Density (kg m-3) of of the crown of the tree. Advanced Input.}
+\item{crown_density}{Density of the crown of individual trees (kg m-3). Advanced Input.}
 
-\item{c_reg}{Regression coefficients (N m kg-1) of uprooting moment against stem weight. Advanced Input.}
+\item{c_reg}{Regression coefficient of uprooting moment against stem weight (N m kg-1). Advanced Input.}
 
-\item{c_drag}{The C parameter of the drag coefficient formula. Dimensionless. Advanced Input.}
+\item{c_drag}{C parameter of the drag coefficient formula (dimensionless). Advanced Input.}
 
-\item{n_drag}{The N parameter of the drag coefficient formula. Dimensionless. Advanced Input.}
+\item{n_drag}{N parameter of the drag coefficient formula (dimensionless). Advanced Input.}
 
-\item{drag_upper_limit}{The experimental maximum wind speed (m*s-1) for calculations of the vaules of \code{n_drag} and \code{c_drag}. Advanced Input.}
+\item{drag_upper_limit}{Maximum wind speed used during the experiments from which \code{n_drag} and \code{c_drag} were derived (m*s-1). Advanced Input.}
 
-\item{snow_depth}{Depth (cm) of layer of snow on tree crown. Advanced Input.}
+\item{snow_depth}{Depth of layer of snow on tree crown (cm). Advanced Input.}
 
-\item{snow_density}{Density (kg m-3) of snow. Advanced Input.}
+\item{snow_density}{Density of snow (kg m-3). Advanced Input.}
 
 \item{ro}{Air density (kg m-3). Advanced Input.}
 
@@ -100,9 +103,7 @@ fg_tmc(stand_id, tree_id, species, tree_ht, dbh, spacing_current,
 
 \item{z}{Spatial coordinate.}
 
-\item{dams}{Value of Detailed Aspect Method of Scoring to describe the local wind climate (for UK conditions only).}
-
-\item{status}{The dominance class of the tree under investigation.}
+\item{dams}{DAMS (Detailed Aspect Method of Scoring) value to describe the local wind climate (for UK conditions only).}
 }
 \value{
 If \code{full_output} = 1, a comprehensive list including: stand and tree id's; for breakage and overturning, the critical wind speeds (m s-1) at

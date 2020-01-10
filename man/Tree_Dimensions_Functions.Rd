@@ -20,28 +20,30 @@ canopy_depth_fun(param0_cr_depth, param1_cr_depth, ht)
 diam_base_fun(dbh, ht, cr_depth)
 }
 \arguments{
-\item{param0_height}{Species-specific parameter for top/mean tree height calculation.}
+\item{param0_height}{Species-specific parameter for conversions between mean height and top height. Offset in linear regression equation.}
 
-\item{param1_height}{Species-specific parameter for top/mean tree height calculation.}
+\item{param1_height}{Species-specific parameter for conversions between mean height and top height. Multiplier in linear regression equation.}
 
-\item{top_ht}{Dominant tree height in the stand.}
+\item{top_ht}{Dominant tree height in the stand (m).}
 
-\item{mean_ht}{Mean tree height in the stand.}
+\item{mean_ht}{Mean tree height in the stand. For the TMC method, arithmetic mean height of the trees in the stand (m).}
 
-\item{param0_cr_width}{Species-specific parameter for crown width calculation.}
+\item{param0_cr_width}{Species-specific parameter for calculation of crown width from dbh. Offset in linear regression equation.}
 
-\item{param1_cr_width}{Species-specific parameter for crown width calculation.}
+\item{param1_cr_width}{Species-specific parameter for calculation of crown width from dbh. Multiplier in linear regression equation.}
 
-\item{dbh}{The dbh (cm) of a tree.}
+\item{dbh}{Diameter of the stem at breast height, i.e. 1.3m above the ground (cm). Depending on the method used ('roughness' or 'TMC') this can be either the arithmetic average of the dbh of all the trees in the stand, or the dbh of an individual tree.}
 
-\item{param0_cr_depth}{Species-specific parameter for crown length calculation.}
+\item{param0_cr_depth}{Species-specific parameter for calculation of crown length from tree height. Offset in linear regression equation.}
 
-\item{param1_cr_depth}{Species-specific parameter for crown length calculation.}
+\item{param1_cr_depth}{Species-specific parameter for calculation of crown length from tree height. Multiplier in linear regression equation.}
 
-\item{ht}{The height (m) of a tree.}
+\item{ht}{Tree height. Depending on the method used ('roughness' or 'TMC'), this can be either the mean tree in the stand, or each individual tree (m).}
 
-\item{cr_depth}{The length (m) of the tree crown.}
+\item{cr_depth}{Length of the tree crown (m).}
+
+\item{equivalent_mean_ht}{Height of stand-level wind moment absorption hypothesised for the TMC method. Calculated from stand top height using a linear relationship derived from the mean height - top height regressions values across all tree species currently included in the model.}
 }
 \description{
-Convert top to mean tree height (and viceversa) and calculate crown dimensions and diameter at base of the tree.
+Convert top to mean tree height (and viceversa), calculate crown dimensions (width and depth) from dbh and tree height, calculate diameter at base of the tree for Deflection Loading Factor, and calculate "equivalent mean height" from stand top height for the TMC method.
 }

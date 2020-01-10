@@ -4,16 +4,16 @@
 \alias{edge_gap_gust_factor_fun}
 \title{Edge Gap Gust Factor.}
 \usage{
-edge_gap_gust_factor_fun(spacing, ht, dist_edge, gap_size)
+edge_gap_gust_factor_fun(spacing, mean_ht, dist_edge, gap_size)
 }
 \arguments{
-\item{spacing}{The distance (m) between trees.}
+\item{spacing}{Mean distance between trees (m).}
 
-\item{ht}{The height of the tree.}
+\item{mean_ht}{The mean tree height in the stand (m).}
 
-\item{dist_edge}{The distance (m) of the tree from the upwind edge.}
+\item{dist_edge}{Distance of tree from the upwind edge (m).}
 
-\item{gap_size}{The length (m) of the upwind gap.}
+\item{gap_size}{Length of the upwind gap (m).}
 }
 \value{
 \code{edge_gap_gust_factor}, the combined effect of edge, gap, and gustiness on the maximum bending moment exerted by the wind on a tree. Used in the roughness method.

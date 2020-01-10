@@ -1,15 +1,16 @@
-#' Convert top to mean tree height (and viceversa) and calculate crown dimensions and diameter at base of the tree.
-#' @param dbh The dbh (cm) of a tree.
-#' @param ht The height (m) of a tree.
-#' @param cr_depth The length (m) of the tree crown.
-#' @param top_ht Dominant tree height in the stand.
-#' @param mean_ht Mean tree height in the stand.
-#' @param param0_height Species-specific parameter for top/mean tree height calculation.
-#' @param param1_height Species-specific parameter for top/mean tree height calculation.
-#' @param param0_cr_width Species-specific parameter for crown width calculation.
-#' @param param1_cr_width Species-specific parameter for crown width calculation.
-#' @param param0_cr_depth Species-specific parameter for crown length calculation.
-#' @param param1_cr_depth Species-specific parameter for crown length calculation.
+#' Convert top to mean tree height (and viceversa), calculate crown dimensions (width and depth) from dbh and tree height, calculate diameter at base of the tree for Deflection Loading Factor, and calculate "equivalent mean height" from stand top height for the TMC method.
+#' @param dbh Diameter of the stem at breast height, i.e. 1.3m above the ground (cm). Depending on the method used ('roughness' or 'TMC') this can be either the arithmetic average of the dbh of all the trees in the stand, or the dbh of an individual tree.
+#' @param ht Tree height. Depending on the method used ('roughness' or 'TMC'), this can be either the mean tree in the stand, or each individual tree (m).
+#' @param cr_depth Length of the tree crown (m).
+#' @param top_ht Dominant tree height in the stand (m).
+#' @param mean_ht Mean tree height in the stand. For the TMC method, arithmetic mean height of the trees in the stand (m).
+#' @param equivalent_mean_ht Height of stand-level wind moment absorption hypothesised for the TMC method. Calculated from stand top height using a linear relationship derived from the mean height - top height regressions values across all tree species currently included in the model.
+#' @param param0_height Species-specific parameter for conversions between mean height and top height. Offset in linear regression equation.
+#' @param param1_height Species-specific parameter for conversions between mean height and top height. Multiplier in linear regression equation.
+#' @param param0_cr_width Species-specific parameter for calculation of crown width from dbh. Offset in linear regression equation.
+#' @param param1_cr_width Species-specific parameter for calculation of crown width from dbh. Multiplier in linear regression equation.
+#' @param param0_cr_depth Species-specific parameter for calculation of crown length from tree height. Offset in linear regression equation.
+#' @param param1_cr_depth Species-specific parameter for calculation of crown length from tree height. Multiplier in linear regression equation.
 #' @name Tree_Dimensions_Functions
 #' @title Tree Dimensions Functions
 NULL
@@ -44,4 +45,10 @@ diam_base_fun <- function(dbh, ht, cr_depth) {
   if(wind_action_point < 1.3*2) {wind_action_point <- 1.3*2}
   dbase <- (dbh / (wind_action_point - 1.3)^0.333) * wind_action_point^0.333 #dbase and dbh in cm in this formula
   return(dbase)
+}
+
+#' @rdname Equivalent_Mean_Height
+eq_mean_ht_fun <- function(top_ht) {
+  equivalent_mean_ht <- 1.03 * top_ht - 1.8
+  return(equivalent_mean_ht)
 }

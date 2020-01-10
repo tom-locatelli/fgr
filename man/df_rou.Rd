@@ -18,6 +18,7 @@ The variables are as follows:
 \details{
 \itemize{
   \item{stand_id.}{ We think it's useful to tag stands for batch simulations. Essential.}
+  \item{date}{ We think it's useful to date stands for batch/repeat simulations. Optional but mind the variables order in the `fg_rou` function call.}
   \item{species.}{  Vulnerability is to a large extent species-specific. Note that the species acronyms need to be wrapped in inverted commas (e.g. "SP" for Scots pine). Essential.}
   \item{mean_ht.}{ Mean tree height (m). Tree height is the main driver of vulnerability. Essential unless \code{top_ht} is provided.}
   \item{mean_dbh.}{ Mean Diameter at Breast Height (cm). Dbh is the second main driver of vulnerability. Essential.}

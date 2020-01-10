@@ -11,19 +11,19 @@ stem_volume_fonweban(dbh, ht, species)
 
 stem_volume_quebec(dbh, ht, species)
 
-stem_volume_laasasenaho(dbh, ht)
+stem_volume_laasasenaho(dbh, ht, species)
 
 stem_volume_japanese_larch_japan(dbh, ht)
 }
 \arguments{
-\item{dbh}{The diameter (cm) of the stem at breast height.}
+\item{dbh}{Diameter of the stem at breast height, i.e. 1.3m above the ground (cm). Depending on the method used ('roughness' or 'TMC') this can be either the arithmetic average of the dbh of all the trees in the stand, or the dbh of an individual tree.}
 
-\item{ht}{The height of the tree.}
+\item{ht}{Tree height. Depending on the method used ('roughness' or 'TMC'), this can be either the mean tree in the stand, or each individual tree (m).}
 
 \item{species}{Tree species.}
 }
 \value{
-The volume (m3) of the stem. Applies the method in Fonweban et al. (2012) to calculate stem volume.
+The volume of the stem (m3). Applies the method in Fonweban et al. (2012) to calculate stem volume.
 }
 \description{
 Calculates the stem volume of a tree.

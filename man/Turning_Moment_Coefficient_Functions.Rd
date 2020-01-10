@@ -14,11 +14,11 @@ tc_zero_intercept_fun(dbh, ht, ci, ci_value)
 tc_zero_intercept_new_bal_fun(dbh, ht, ci, ci_value)
 }
 \arguments{
-\item{dbh}{The dbh (cm) of a tree.}
+\item{dbh}{Diameter of the stem at breast height, i.e. 1.3m above the ground (cm).}
 
-\item{ht}{The height (m) of a tree.}
+\item{ht}{Individual tree height (m).}
 
-\item{ci}{Competition Index (\code{BAL}, \code{Hegyi}) used. Can be \code{None}.}
+\item{ci}{Competition Index (\code{bal}, \code{heg}, \code{none}) used.}
 
 \item{ci_value}{Value of \code{ci}.}
 }

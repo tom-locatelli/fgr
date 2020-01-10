@@ -1,10 +1,10 @@
 #' Calculates the stem volume of a tree.
 #' @title Stem Volume Function.
 #' @param species Tree species.
-#' @param dbh The diameter (cm) of the stem at breast height.
-#' @param ht The height of the tree.
-#' @return The volume (m3) of the stem. Applies the method in Fonweban et al. (2012) to calculate stem volume.
-stem_volume_fonweban <- function(dbh, ht, species){ #From Fonweban et al. 2012. Eq 4
+#' @param dbh Diameter of the stem at breast height, i.e. 1.3m above the ground (cm). Depending on the method used ('roughness' or 'TMC') this can be either the arithmetic average of the dbh of all the trees in the stand, or the dbh of an individual tree.
+#' @param ht Tree height. Depending on the method used ('roughness' or 'TMC'), this can be either the mean tree in the stand, or each individual tree (m).
+#' @return The volume of the stem (m3). Applies the method in Fonweban et al. (2012) to calculate stem volume.
+stem_volume_fonweban <- function(dbh, ht, species, species_parameters){ #From Fonweban et al. 2012. Eq 4
   param0_tvf <- species_parameters[species, "param0_vol"] #get(paste0("param0_tvf_", species))
   param1_tvf <- species_parameters[species, "param1_vol"] #get(paste0("param1_tvf_", species))
   param2_tvf <- species_parameters[species, "param2_vol"] #get(paste0("param2_tvf_", species))

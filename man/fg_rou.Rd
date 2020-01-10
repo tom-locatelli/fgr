@@ -4,70 +4,73 @@
 \alias{fg_rou}
 \title{ForestGALES - Roughness method.}
 \usage{
-fg_rou(stand_id, species, mean_ht, mean_dbh, spacing, full_output = 1,
-  weib_a = NA, weib_k = NA, top_ht = NA, mean_cr_width = NA,
-  mean_cr_depth = NA, soil_group = NA, rooting = NA, new_edge = NA,
-  gap_size = NA, moe = NA, mor = NA, fknot = NA, stem_vol = NA,
-  crown_vol = NA, stem_density = NA, crown_density = NA, c_reg = NA,
-  c_drag = NA, n_drag = NA, drag_upper_limit = NA, snow_depth = NA,
-  snow_density = NA, ro = NA, x = NA, y = NA, z = NA, dams = NA)
+fg_rou(stand_id, date, species, mean_ht, mean_dbh, spacing,
+  full_output = 1, weib_a = NA, weib_k = NA, top_ht = NA,
+  mean_cr_width = NA, mean_cr_depth = NA, soil_group = NA,
+  rooting = NA, new_edge = NA, gap_size = NA, moe = NA, mor = NA,
+  fknot = NA, stem_vol = NA, crown_vol = NA, stem_density = NA,
+  crown_density = NA, c_reg = NA, c_drag = NA, n_drag = NA,
+  drag_upper_limit = NA, snow_depth = NA, snow_density = NA,
+  ro = NA, x = NA, y = NA, z = NA, dams = NA)
 }
 \arguments{
-\item{stand_id}{The stand identifier. Essential.}
+\item{stand_id}{Stand identifier. Essential.}
 
-\item{species}{The tree species under investigation. Essential.}
+\item{date}{Date of wind damage risk assessment. Optional (but useful! Mind the variable order in the function call!).}
 
-\item{mean_ht}{The mean tree height (m) in the stand. Essential (unless \code{top_ht} is provided).}
+\item{species}{Tree species under investigation. Essential.}
 
-\item{mean_dbh}{The mean dbh (cm) of trees in the stand. Essential.}
+\item{mean_ht}{Arithmetic mean height of the trees in the stand (m). Essential (unless \code{top_ht} is provided).}
 
-\item{spacing}{The current mean spacing (m) between trees in the stand. Essential.}
+\item{mean_dbh}{Mean dbh of all trees in the stand (cm). Dbh is diameter at breast height, measured at 1.3m above the ground. Essential.}
 
-\item{full_output}{Switch between full and minimal outputs.}
+\item{spacing}{Mean distance between trees (m). Essential.}
 
-\item{weib_a}{The scale parameter of the Weibull distribution of local wind speeds.}
+\item{full_output}{Switch between full and basic outputs.}
 
-\item{weib_k}{The shape parameter of the Weibull distribution of local wind speeds.}
+\item{weib_a}{Scale parameter of the Weibull distribution for local wind speeds.}
 
-\item{top_ht}{The height (m) of the dominant tree(s) in the stand. Essential (unless \code{mean_ht} is provided).}
+\item{weib_k}{Shape parameter of the Weibull distribution for local wind speeds.}
 
-\item{mean_cr_width}{The width (m) of the crown of the mean tree in the stand.}
+\item{top_ht}{The height of the dominant tree(s) in the stand (m). Essential (unless \code{mean_ht} is provided).}
 
-\item{mean_cr_depth}{The length (m) of the crown of the mean tree in the stand.}
+\item{mean_cr_width}{Width of the crown of the mean tree in the stand (m).}
 
-\item{soil_group}{The soil type identifier.}
+\item{mean_cr_depth}{Length of the crown of the mean tree in the stand (m).}
 
-\item{rooting}{The rooting depth class (1 = Shallow, 2 = Deep, 3 = Medium).}
+\item{soil_group}{Soil group identifier (1 = freely draining mineral soils; 2 = gleyed mineral soils; 3 = peaty mineral soils; 4 = deep peats).}
+
+\item{rooting}{Rooting depth class (1 = Shallow, 2 = Deep, 3 = Medium).}
 
 \item{new_edge}{Switch to toggle between green upwind edge (0) or brown upwind edge (1)}
 
-\item{gap_size}{Length (m) of the upwind gap.}
+\item{gap_size}{Length of the upwind gap (m).}
 
-\item{moe}{Modulus of Elasticity (MPa) of green wood. Advanced Input.}
+\item{moe}{Modulus of Elasticity of green wood (MPa). Advanced Input.}
 
-\item{mor}{Modulus of Rupture (MPa) of green wood. Advanced Input.}
+\item{mor}{Modulus of Rupture of green wood (MPa). Advanced Input.}
 
-\item{fknot}{Knot factor. Dimensionless. Advanced Input.}
+\item{fknot}{Knot factor (dimensionless). Advanced Input.}
 
-\item{stem_vol}{Volume (m3) of the stem of the tree. Advanced Input.}
+\item{stem_vol}{Stem volume of the mean tree in the stand (m^3). Advanced Input.}
 
-\item{crown_vol}{Volume (m3) of the tree crown. Advanced Input.}
+\item{crown_vol}{Volume of the crown of the mean tree (m^3). Advanced Input.}
 
-\item{stem_density}{Density (kg m-3) of green wood of the stem. Advanced Input.}
+\item{stem_density}{Density of green wood of the stem (kg m-3). Advanced Input.}
 
-\item{crown_density}{Density (kg m-3) of of the crown of the tree. Advanced Input.}
+\item{crown_density}{Density of the crown of the mean tree (kg m-3). Advanced Input.}
 
-\item{c_reg}{Regression coefficients (N m kg-1) of uprooting moment against stem weight. Advanced Input.}
+\item{c_reg}{Regression coefficients of uprooting moment against stem weight (N m kg-1). Advanced Input.}
 
-\item{c_drag}{The C parameter of the drag coefficient formula. Dimensionless. Advanced Input.}
+\item{c_drag}{C parameter of the drag coefficient formula (dimensionless). Advanced Input.}
 
-\item{n_drag}{The N parameter of the drag coefficient formula. Dimensionless. Advanced Input.}
+\item{n_drag}{N parameter of the drag coefficient formula (dimensionless). Advanced Input.}
 
-\item{drag_upper_limit}{The experimental maximum wind speed (m*s-1) for calculations of the vaules of \code{n_drag} and \code{c_drag}. Advanced Input.}
+\item{drag_upper_limit}{Maximum wind speed used during the experiments from which \code{n_drag} and \code{c_drag} were derived (m*s-1). Advanced Input.}
 
-\item{snow_depth}{Depth (cm) of layer of snow on tree crown. Advanced Input.}
+\item{snow_depth}{Depth of layer of snow on tree crown (cm). Advanced Input.}
 
-\item{snow_density}{Density (kg m-3) of snow. Advanced Input.}
+\item{snow_density}{Density of snow (kg m-3). Advanced Input.}
 
 \item{ro}{Air density (kg m-3). Advanced Input.}
 
@@ -77,7 +80,7 @@ fg_rou(stand_id, species, mean_ht, mean_dbh, spacing, full_output = 1,
 
 \item{z}{Spatial coordinate.}
 
-\item{dams}{Value of Detailed Aspect Method of Scoring to describe the local wind climate (for UK conditions only).}
+\item{dams}{DAMS (Detailed Aspect Method of Scoring) value to describe the local wind climate (for UK conditions only).}
 }
 \value{
 If \code{full_output} = 1, a comprehensive list including: stand id; for breakage and overturning, the critical wind speeds (m s-1) at

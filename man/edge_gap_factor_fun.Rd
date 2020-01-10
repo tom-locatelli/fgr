@@ -4,16 +4,16 @@
 \alias{edge_gap_factor_fun}
 \title{Edge Gap Factor.}
 \usage{
-edge_gap_factor_fun(spacing, ht, dist_edge, gap_size)
+edge_gap_factor_fun(spacing, equivalent_mean_ht, dist_edge, gap_size)
 }
 \arguments{
-\item{spacing}{The distance (m) between trees.}
+\item{spacing}{Mean distance between trees (m).}
 
-\item{ht}{The height of the tree.}
+\item{equivalent_mean_ht}{Equivalent mean stand height: the level in the stand responsible for most of the momentum absorption (m).}
 
-\item{dist_edge}{The distance (m) of the tree from the upwind edge.}
+\item{dist_edge}{Distance of tree from the upwind edge (m).}
 
-\item{gap_size}{The length (m) of the upwind gap.}
+\item{gap_size}{Length of the upwind gap (m).}
 }
 \value{
 \code{edge_gap_factor}, the combined effect of edge and gap on the maximum bending moment exerted by the wind on a tree. Used in the tmc method.

@@ -61,6 +61,9 @@ Table 1: Input variables for the wrapper functions of the *roughness* and the *T
 |gap_size           |         D          |       D       |Defaults to 0                                                         |
 |spacing_before     |        *NA*        |       D       |Defaults to `spacing_current`                                         |
 |years_since_thin   |        *NA*        |       D       |Defaults to 5 years (fully re-acclimated)                             |
+|elev_ht            |         A          |       A       |Defaults to mean tree height for the roughness method, and to 1.05 * top height for the TMC method|
+|species_parameters |         A          |       A       |Defaults to Internal Data species parameters data.frame               |
+|fgr_constants      |         A          |       A       |Defaults to Internal Data fgr constants data.frame                    |
 |moe                |         A          |       A       |Defaults to species-specific value                                    |
 |mor                |         A          |       A       |Defaults to species-specific value                                    |
 |fknot              |         A          |       A       |Defaults to species-specific value                                    |
@@ -74,7 +77,7 @@ Table 1: Input variables for the wrapper functions of the *roughness* and the *T
 |drag_upper_limit   |         A          |       A       |Defaults to species-specific value                                    |
 |snow_depth         |         A          |       A       |Defaults to 0 (no snow)                                               |
 |snow_density       |         A          |       A       |Defaults to 150 kg m-3                                                |
-|ci                 |        *NA*        |       A       |Defaults to "None" If used, it needs to be in inverted commas (e.g. "Bal"\*|
+|ci                 |        *NA*        |       A       |Defaults to "none" If used, it needs to be in inverted commas (e.g. "bal"\*)|
 |ci_value           |        *NA*        |       A       |Defaults to *NA*                                                      |
 |ro                 |         A          |       A       |Defaults to 1.2226 kg m-3                                             |
 |x                  |         A          |       A       |Defaults to *NA*                                                      |
@@ -158,6 +161,7 @@ Table 2: Variables in the full and the short outputs for the *roughness* and the
 |new_edge               |        X         |                   |            |             |
 |dist_edge              |                  |                   |     X      |             |
 |gap_size               |        X         |                   |     X      |             |
+|elev_ht                |        X         |                   |     X      |             |
 |moe                    |        X         |                   |     X      |             |
 |mor                    |        X         |                   |     X      |             |
 |fknot                  |        X         |                   |     X      |             |

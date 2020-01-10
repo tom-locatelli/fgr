@@ -18,14 +18,14 @@ knitr::opts_chunk$set(
 ```
 Both the '*roughness*'and the *TMC* methods require that some tree dimensions are known (i.e. provided by the user) or calculated within the model's workflow.
 
-## Top height and mean height
+## Top height, mean height, and equivalent mean height
 
 Top stand height (e.g. the average height of the 100 trees per hectare with the largest dbh) is a commonly used measurement in forest management, especially in the UK.
-For the roughness method, ForestGALES^[Throughout the package documentation, we will use the name *ForestGALES* to refer to the model characteristics as described in e.g. Hale et al. (2015) or Gardiner et al. (2000, 2008). Conversely, when we refer to the functionalities implemented in this package, we use the name *fgr*] calculates the CWS and risk of damage for the mean tree in the stand. For this, top height is converted into mean height using linear regression coefficients derived from forest inventory data. Other mean tree characteristics are calculated from mean height.
+For the roughness method, ForestGALES^[Throughout the package documentation, we will use the name *ForestGALES* to refer to the model characteristics as described in e.g. Hale et al. (2015) or Gardiner et al. (2000, 2008). Conversely, when we refer to the functionalities implemented in this package, we use the name *fgr*] calculates the CWS and risk of damage for the mean tree in the stand. For this, top height is converted into mean height using linear regression coefficients derived from forest inventory data. Other mean tree characteristics are calculated from mean height. Therefore, knowledge of either top height or mean height is essential to calculate CWS with the roughness method.
 
-For the *TMC* method, the mean height of the stand is used in the calculations of aerodynamic roughness ($z_0$) and zero-plane displacement ($d$), while stand's top height is used in the `elevate` function, which is used to convert the critical wind speeds to the wind speed 10 meters above zero plane displacement (to compare with for anemometers' data, see the `Critical Wind Speeds` vignette).
+For the *TMC* method, the *equivalent mean height* of the stand is used in the calculations of aerodynamic roughness ($z_0$) and zero-plane displacement ($d$). The equivalent mean height is derived from stand top height (defined as above) to define the height of wind moment absorption at stand level. Stand's top height is also used in the `elevate` function to convert the critical wind speeds to the wind speed 10 meters above zero plane displacement (to compare with for anemometers' data, see the `Critical Wind Speeds` vignette). Stand mean height is used in the *TMC* method to calculate stand mean canopy parameters used in the calculations of the $z_0$ and $d$, for use in both the `elevate` function and in the *Turning Moment Ratios* `tm_ratio` function.
 
-Knowledge of either top height or mean height is essential to calculate CWS in ForestGALES.
+
 
 ## Canopy width
 
