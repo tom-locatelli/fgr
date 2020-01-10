@@ -67,16 +67,15 @@ uh_overturning_tmc_tmr_simple <- function(tree_ht, dbh, cr_depth, cr_width, spac
   overturning_moment <- critical_moment_overturning(c_reg, stem_density, stem_vol)
   edge_gap_factor <- edge_gap_factor_fun(spacing_current, equivalent_mean_ht, dist_edge, gap_size, fgr_constants)
   tmc <- tc_zero_intercept_fun_balBA(dbh, tree_ht, ci, ci_value)
-  tmr_simple <- tm_ratio_simple(spacing_before, spacing_current, years_since_thin)
 
-  uguess <- 25 #initial guess wind speed to initiate the iteration
+  uguess <- sqrt(overturning_moment / tmc) #initial guess wind speed to initiate the iteration
   uguess1 <- uguess
   uh_o <-  uguess / 2
   while (abs(uguess1 - uh_o) > fgr_constants$wind_precision) {
     uguess1 <- uguess
     bm_tmc <- tmc * uguess^2
-    dlf_calc <- dlf_fun(bm_tmc, tree_ht, cr_depth, cr_width, stem_vol, dbh, moe, crown_density, stem_density, snow_depth, snow_density, fgr_constants)
-    dlf_used <- ifelse(dlf_calc < 1, fgr_constants$dlf, ifelse(dlf_calc > 2, fgr_constants$dlf, dlf_calc))
+    dlf_calc <- dlf_fun(bm_tmc, tree_ht, cr_depth, cr_width, stem_vol, dbh, moe, crown_density, stem_density, snow_depth, snow_density, fgr_constants)    dlf_used <- ifelse(dlf_calc < 1, fgr_constants$dlf, ifelse(dlf_calc > 2, fgr_constants$dlf, dlf_calc))
+    tmr_simple <- tm_ratio_simple(spacing_before, spacing_current, years_since_thin)
     uh_o <- sqrt(overturning_moment / (tmc*dlf_used*tmr_simple*edge_gap_factor))
     uguess <- uh_o
   }
