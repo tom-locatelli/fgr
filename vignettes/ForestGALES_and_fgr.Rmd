@@ -109,7 +109,7 @@ View it:
 ```
 View(ud_species_parameters)
 ```
-Make a copy of it before removing the original from the Global Environment:
+Make a copy of it before removing the original from the Global Environment (GE):
 ```
 mydata.sp <- ud_species_parameters
 rm(ud_species_parameters)
@@ -152,7 +152,7 @@ The user-defined species parameters are now stored for future use, and can be lo
 ```
 load(file = "C:/Program Files/RStudio/fgr/ForestGALES-R scripts/mydata.sp.rda")
 ```
-A similar exercise with `fgr_constants` - firstly load the copy of the default values:
+A similar exercise can be done with `fgr_constants`. Firstly, load the copy of the default values:
 ```
 load(file = "C:/Program Files/RStudio/fgr/fgr/data/ud_fgr_constants.rda")
 ```
@@ -167,12 +167,12 @@ rm(ud_fgr_constants)
 ```
 Change the value of von Karman's constant:
 ```
-ud_fgr_constants$k <- 0.41
+mydata.fc$k <- 0.41
 ```
 Save the new version with the revised value, before removing it from the GE:
 ```
 save(mydata.fc, file = "C:/Program Files/RStudio/fgr/ForestGALES-R scripts/mydata.fc.rda")
-rm(mydata)
+rm(mydata.fc)
 ```
 As for the species parameters file, the user-defined general constants file is now stored for future use, and can be loaded any time as such:
 ```
@@ -316,6 +316,7 @@ Table 2: Variables in the full and the short outputs for the *roughness* and the
 |spacing_current        |                  |                   |     X      |             |
 |spacing_before         |                  |                   |     X      |             |
 |years_since_thin       |                  |                   |     X      |             |
+|elev_ht                |        X         |                   |     X      |             |
 |mean_cr_width          |                  |                   |     X      |             |
 |mean_cr_depth          |                  |                   |     X      |             |
 |soil_group             |        X         |                   |     X      |             |
@@ -365,24 +366,25 @@ Using the example datasets provided in the package, this is trivially achieved a
 The possibility of fully customising *fgr* inputs provides us with the opportunity of incorporating the effect of increasing values of the Moduli of Rupture (MOR) and of Elasticity (MOE) throughout the rotation. As shown by Moore et al. (2009), the mechanical properties of juvenile and mature wood of Sitka spruce are quite different, with wood becoming stiffer and more resistant to breakage as trees age. 
 With either experimental knowledge of MOE and MOR throughout a rotation (e.g. from sampling thinned trees or applying acoustic tools on the standing stock), or with the use of modelled values, *fgr* users can refine the results of their simulations to incorporate the evolution of the stem's mechanical properties throughout a rotation, as done by Locatelli et al. (2018) in their modelling work with *Acacia* hybrid (*A. mangium X A. auricoliformis*). Following from the example above:
 ```
-stand_id <- as.character(df_rou$stand_id)
-date <- df_rou$date
-species <- as.character(df_rou$species)
-mean_ht <- df_rou$mean_ht
-mean_dbh <- df_rou$mean_dbh
-spacing <- df_rou$spacing
-full_output = 1
-weib_a <- df_rou$weib_a
-weib_k <- df_rou$weib_b
-moe <- df_rou$moe_by_age
-mor <- df_rou$mor_by_age
+ex.stand_id <- as.character(df_rou$stand_id)
+ex.date <- df_rou$date
+ex.species <- as.character(df_rou$species)
+ex.mean_ht <- df_rou$mean_ht
+ex.mean_dbh <- df_rou$mean_dbh
+ex.spacing <- df_rou$spacing
+ex.full_output = 1
+ex.weib_a <- df_rou$weib_a
+ex.weib_k <- df_rou$weib_b
+ex.moe <- df_rou$moe_by_age
+ex.mor <- df_rou$mor_by_age
 
-out_rou_mech <- as.data.frame(t(fg_rou_v(stand_id, date, species, mean_ht, mean_dbh, spacing, full_output, weib_a, weib_k, moe = moe, mor = mor)))
+out_rou_mech <- as.data.frame(t(fg_rou_v(ex.stand_id, ex.date, ex.species, ex.mean_ht, ex.mean_dbh, ex.spacing, ex.full_output, ex.weib_a, ex.weib_k, moe = ex.moe, mor = ex.mor)))
 
 library(tidyr)
 out_rou_mech_df <- unnest(out_rou_mech)
 ```
-
+Note that in the example above only the MOE (`ex.moe`) and MOR (`ex.mor`) are declared with their argument names (`moe` and `mor`), while all the other arguments are not. This is because all the other arguments are in the exact order and position as per the argument list in the `fg_rou` function call, while `moe` and `mor` are not.
+ 
 ####Plotting CWS through a rotation:
 The CWS throughout a rotation can be visualised by e.g. plotting the calculated CWS for damage (either breakage or uprooting) against stand age. With `ggplot2`, stand age (in this example, `df_rou$stand_age`) needs to be in the same dataframe as the CWS before a graph can be generated. 
 With base R plotting, plotting of CWS *vs* Age is trivial:
@@ -397,82 +399,79 @@ plot(df_rou$stand_age ~ out_rou_mech_df$u10_damage, type = "b", main = "CWS of d
 
 ### Example datasets: the TMC method
 ```
-stand_id <- as.character(df_tmc$stand_id)
-tree_id <- as.character(df_tmc$tree_id)
-date <- df_tmc$date
-species <- as.character(df_tmc$species)
-tree_ht <- df_tmc$tree_ht
-dbh <- df_tmc$dbh
-spacing_current <- df_tmc$spacing_current
-stand_mean_ht <- df_tmc$stand_mean_ht
-stand_top_ht <- df_tmc$stand_top_ht
-stand_mean_dbh <- df_tmc$stand_mean_dbh
-predominant_species <- as.character(df_tmc$predominant_species)
-full_output <- 1
-weib_a <- df_tmc$weib_a
-weib_k <- df_tmc$weib_k
-cr_width <- df_tmc$cr_width
-cr_depth <- df_tmc$cr_depth
-stand_cr_width <- df_tmc$stand_cr_width
-stand_cr_depth <- df_tmc$stand_cr_depth
-soil_group <- df_tmc$soil_group
-rooting <- df_tmc$rooting
-dist_edge <- df_tmc$dist_edge
-gap_size <- df_tmc$gap_size
-spacing_before <- df_tmc$spacing_before
-years_since_thin <- df_tmc$years_since_thin
-moe <- df_tmc$moe
-mor <- df_tmc$mor
-fknot <- df_tmc$fknot
-stem_vol <- df_tmc$stem_vol
-crown_vol <- df_tmc$crown_vol
-stem_density <- df_tmc$stem_density
-crown_density <- df_tmc$crown_density
-c_reg <- df_tmc$c_reg
-c_drag <- df_tmc$c_drag
-n_drag <- df_tmc$n_drag
-drag_upper_limit <- df_tmc$drag_upper_limit
-snow_depth <- df_tmc$snow_depth
-snow_density <- df_tmc$snow_density
-ci <- as.character(df_tmc$ci)
-ci_value <- df_tmc$ci_value
-ro <- df_tmc$ro
-x <- df_tmc$x
-y <- df_tmc$y
-z <- df_tmc$z
-dams <- df_tmc$dams 
-
-out_tmc <- as.data.frame(t(fg_tmc_v(stand_id, tree_id, date, species, tree_ht, dbh, spacing_current, predominant_species, stand_mean_ht, stand_mean_dbh,
-                                    stand_top_ht, full_output, weib_a, weib_k, ci, ci_value, cr_width, cr_depth, stand_cr_width, stand_cr_depth, 
-                                    soil_group, rooting, dist_edge, gap_size, spacing_before, years_since_thin, moe, mor, fknot, stem_vol, 
-                                    crown_vol, stem_density, crown_density, c_reg, c_drag, n_drag, drag_upper_limit, snow_depth, snow_density, 
-                                    ro, x, y, z, dams))) 
+ex.stand_id <- as.character(df_tmc$stand_id)
+ex.tree_id <- as.character(df_tmc$tree_id)
+ex.date <- df_tmc$date
+ex.species <- as.character(df_tmc$species)
+ex.tree_ht <- df_tmc$tree_ht
+ex.dbh <- df_tmc$dbh
+ex.spacing_current <- df_tmc$spacing_current
+ex.stand_mean_ht <- df_tmc$stand_mean_ht
+ex.stand_top_ht <- df_tmc$stand_top_ht
+ex.stand_mean_dbh <- df_tmc$stand_mean_dbh
+ex.predominant_species <- as.character(df_tmc$predominant_species)
+ex.full_output <- 1
+ex.weib_a <- df_tmc$weib_a
+ex.weib_k <- df_tmc$weib_k
+ex.cr_width <- df_tmc$cr_width
+ex.cr_depth <- df_tmc$cr_depth
+ex.stand_cr_width <- df_tmc$stand_cr_width
+ex.stand_cr_depth <- df_tmc$stand_cr_depth
+ex.soil_group <- df_tmc$soil_group
+ex.rooting <- df_tmc$rooting
+ex.dist_edge <- df_tmc$dist_edge
+ex.gap_size <- df_tmc$gap_size
+ex.spacing_before <- df_tmc$spacing_before
+ex.years_since_thin <- df_tmc$years_since_thin
+ex.moe <- df_tmc$moe
+ex.mor <- df_tmc$mor
+ex.fknot <- df_tmc$fknot
+ex.stem_vol <- df_tmc$stem_vol
+ex.crown_vol <- df_tmc$crown_vol
+ex.stem_density <- df_tmc$stem_density
+ex.crown_density <- df_tmc$crown_density
+ex.c_reg <- df_tmc$c_reg
+ex.c_drag <- df_tmc$c_drag
+ex.n_drag <- df_tmc$n_drag
+ex.drag_upper_limit <- df_tmc$drag_upper_limit
+ex.snow_depth <- df_tmc$snow_depth
+ex.snow_density <- df_tmc$snow_density
+ex.ci <- as.character(df_tmc$ci)
+ex.ci_value <- df_tmc$ci_value
+ex.ro <- df_tmc$ro
+ex.x <- df_tmc$x
+ex.y <- df_tmc$y
+ex.z <- df_tmc$z
+ex.dams <- df_tmc$dams 
+-id
+out_tmc <- as.data.frame(t(fg_tmc_v(stand_id = ex.stand.id, tree_id = ex.tree_id, date = ex.date, species = ex.species, tree_ht = ex.tree_ht, dbh = ex.dbh, spacing_current = ex.spacing_current, predominant_species = ex.predominant_species, stand_mean_ht = ex.stand_mean_ht, stand_mean_dbh = ex.stand_mean_dbh, stand_top_ht = ex.stand_top_ht, full_output = ex.full_output, weib_a = ex.weib_a, weib_k = ex.weib_k, ci = ex.ci, ci_value = ex.ci-value, cr_width = ex.cr_width, cr_depth = ex.cr_depth, stand_cr_width = ex.stand_cr_width, stand_cr_depth = ex.stand_cr_depth, soil_group = ex.soil_group, rooting = ex.rooting, dist_edge = ex.dist_edge, gap_size = ex.gap_size, spacing_before = ex.spacing_before, years_since_thin = ex.years_since_thin, moe = ex.moe, mor = ex.mor, fknot = ex.fknot, stem_vol = ex.stem_vol, crown_vol = ex.crown_vol, stem_density = ex.stem_density, crown_density = ex.crown_density, c_reg = ex.c_reg, c_drag = ex.c_drag, n_drag = ex.n_drag, drag_upper_limit = ex.drag_upper_limit, snow_depth = ex.snow_depth, snow_density = ex.snow_density, ro = ex.ro, x = ex.x, y = ex.y, z = ex.z, dams = ex.dams))) 
                                     
 library(tidyr)
 out_tmc_df <- unnest(out_tmc)
 
 #Note the use of the vectorised TMC function ("fg_tmc_v""), the transpose ("t") and data frame ("as.data.frame") base R functions, and the "unnest" function of the tidyr package to convert the list outputs of the fg_tmc function to a data.frame object suitable for extracting a CSV file.
+Also note how all the variable names are stated out to make sure no unwanted misplacement of variables occurs.
 ```
 One can apply a similar procedure with the *roughness* method (e.g. using the `df_rou` dataset). 
 
-It should be noted that inputs need to be provided solely for the Essential variables (plus `full_output`). Given the order of the functions arguments (see **Overview: Inputs** section above), all the other inputs (Desirables and Advanced) can be omitted if unavailable, and will default to the values described in Table 1. 
+It should be noted that inputs need to be provided solely for the Essential variables (plus `full_output`). Given the order of the functions arguments (see **Overview: Inputs** section above), all the other inputs (Desirables and Advanced) can be omitted if unavailable, and will default to the values described in Table 1. The order in which the arguments are fed to the functions is of course extremely important. Especially when using complex setups with multiple customised variables, stating the variables names as per the example above typically decreases the risk of misplacing an input in the function call.
 
-Using the `df_tmc_2` dataset as an example, be mindful that it is required to use the `as.character()` function for `species`, `stand_id`, `tree_id`, `predominant_species`, and `ci`, which  would otherwise be treated as factors, and `as.Date()` for date:
+Using the `df_tmc_2` dataset as an example, one should be mindful that it is required to use the `as.character()` function for `species`, `stand_id`, `tree_id`, `predominant_species`, which  would otherwise be treated as factors. Note that if Competition Indices were used, `ci` would also need to be treated as a character type.
 ```
-stand_id <- as.character(df_tmc_2$stand_id)
-tree_id <- as.character(df_tmc_2$tree_id)
-date <- df_tmc_2$date
-species <- as.character(df_tmc_2$species)
-tree_ht <- df_tmc_2$tree_ht
-dbh <- df_tmc_2$dbh
-spacing_current <- df_tmc_2$spacing_current
-stand_mean_ht <- df_tmc_2$stand_mean_ht
-stand_top_ht <- df_tmc_2$stand_top_ht
-stand_mean_dbh <- df_tmc_2$stand_mean_dbh
-predominant_species <- as.character(df_tmc_2$predominant_species)
-full_output <- 1
+ex.stand_id <- as.character(df_tmc_2$stand_id)
+ex.tree_id <- as.character(df_tmc_2$tree_id)
+ex.date <- df_tmc_2$date
+ex.species <- as.character(df_tmc_2$species)
+ex.tree_ht <- df_tmc_2$tree_ht
+ex.dbh <- df_tmc_2$dbh
+ex.spacing_current <- df_tmc_2$spacing_current
+ex.stand_mean_ht <- df_tmc_2$stand_mean_ht
+ex.stand_top_ht <- df_tmc_2$stand_top_ht
+ex.stand_mean_dbh <- df_tmc_2$stand_mean_dbh
+ex.predominant_species <- as.character(df_tmc_2$predominant_species)
+ex.full_output <- 1
 
-out_tmc_2 <- as.data.frame(t(fg_tmc_v(stand_id, tree_id, date, species, tree_ht, dbh, spacing_current, stand_mean_ht, stand_top_ht, stand_mean_dbh,  predominant_species, full_output)))
+out_tmc_2 <- as.data.frame(t(fg_tmc_v(ex.stand_id, ex.tree_id, ex.date, ex.species, ex.tree_ht, ex.dbh, ex.spacing_current, ex.predominant_species, ex.stand_mean_ht, ex.stand_mean_dbh, ex.stand_top_ht, ex.full_output)))
 
 library(tidyr)
 out_tmc_2_df <- unnest(out_tmc_2)
@@ -487,31 +486,29 @@ fg_tmc_v <- Vectorize(fg_tmc)
 ```
 Secondly, the `df_tmc_moses_gb` dataset is split in its component variables. The stand is in a location with a wind climate described by the Weibull parameters in the dataset. Note that in the dataset, columns are assigned to `weib_a` and `weib_k`. The values of these variables in the dataset remain constant throughout the rotation. In reality, they are likely to change due to e.g. changes in the roughness of the surrounding area (e.g. due to changes in land-use such as harvesting of a neighbouring stand), and climate change (current projections of the future wind climate (e.g.) indicate an increase of the likelihood of extreme events (the *k* parameter of the Weibull distribution), but possibly no changes in the mean wind speed (the *A* parameter)).
 
-For the purposes of this example, we are only concerned with the short output, so we can set `full_output` to 0 (i.e. "short" output). As for the previous *TMC* examples above, we want to treat `species` and `stand_id` as character type, not as factors, and `date` as date type. Note that information on individual and stand-level crown depth is available and therefore fed to the model. Tree positions are provided so they are included to allow the output to be applied eventually in a GIS project.
+For the purposes of this example, we are only concerned with the short output, so we can set `full_output` to 0 (i.e. "short" output). As for the previous *TMC* examples above, we want to treat `species` and `stand_id` as character type, not as factors. Note that information on individual and stand-level crown depth is available and therefore fed to the model. Tree positions are provided so they are included to allow the output to be applied eventually in a GIS project to map wind damge risk.
 
 ```
-stand_id <- as.character(df_tmc_moses_gb$stand)
-tree_id <- as.character(df_tmc_moses_gb$treeid)
-date <- df_tmc_moses_gb$date
-species <- as.character(df_tmc_moses_gb$species)
-tree_ht <- df_tmc_moses_gb$tree_ht
-dbh <- df_tmc_moses_gb$dbh
-spacing_current <- df_tmc_moses_gb$spacing
-stand_mean_ht <- df_tmc_moses_gb$stand_mean_ht
-stand_top_ht <- df_tmc_moses_gb$stand_top_ht
-stand_mean_dbh <- df_tmc_moses_gb$stand_mean_dbh
-cr_depth <- df_tmc_moses_gb$cr_depth
-stand_cr_depth <- df_tmc_moses_gb$stand_cr_depth
-gap_size <- 0
-x <- df_tmc_moses_gb$x
-y <- df_tmc_moses_gb$y
-full_output <- 0
-weib_a <- df_tmc_moses_gb$weib_a
-weib_k <- df_tmc_moses_gb$weib_b
+ex.stand_id <- as.character(df_tmc_moses_gb$stand)
+ex.tree_id <- as.character(df_tmc_moses_gb$treeid)
+ex.date <- df_tmc_moses_gb$date
+ex.species <- as.character(df_tmc_moses_gb$species)
+ex.tree_ht <- df_tmc_moses_gb$tree_ht
+ex.dbh <- df_tmc_moses_gb$dbh
+ex.spacing_current <- df_tmc_moses_gb$spacing
+ex.stand_mean_ht <- df_tmc_moses_gb$stand_mean_ht
+ex.stand_top_ht <- df_tmc_moses_gb$stand_top_ht
+ex.stand_mean_dbh <- df_tmc_moses_gb$stand_mean_dbh
+ex.cr_depth <- df_tmc_moses_gb$cr_depth
+ex.stand_cr_depth <- df_tmc_moses_gb$stand_cr_depth
+ex.gap_size <- 0
+ex.x <- df_tmc_moses_gb$x
+ex.y <- df_tmc_moses_gb$y
+ex.full_output <- 0
+ex.weib_a <- df_tmc_moses_gb$weib_a
+ex.weib_k <- df_tmc_moses_gb$weib_b
 
-out_tmc_moses_gb <- as.data.frame(t(fg_tmc_v(stand_id = stand_id, tree_id = tree_id, date = date, species = species, tree_ht = tree_ht, dbh = dbh,
-                                             spacing_current = spacing_current, predominant_species = species, stand_mean_ht = stand_mean_ht,
-                                             stand_mean_dbh = stand_mean_dbh, stand_top_ht = stand_top_ht, full_output = full_output, weib_a = weib_a, weib_k =                                                   weib_k, cr_depth = cr_depth, stand_cr_depth = stand_cr_depth, gap_size = gap_size, x = x, y = y)))
+out_tmc_moses_gb <- as.data.frame(t(fg_tmc_v(stand_id = ex.stand_id, tree_id = ex.tree_id, date = ex.date, species = ex.species, tree_ht = ex.tree_ht, dbh = ex.dbh, spacing_current = ex.spacing_current, predominant_species = ex.species, stand_mean_ht = ex.stand_mean_ht, stand_mean_dbh = ex.stand_mean_dbh, stand_top_ht = ex.stand_top_ht, full_output = ex.full_output, weib_a = ex.weib_a, weib_k = ex.weib_k, cr_depth = ex.cr_depth, stand_cr_depth = ex.stand_cr_depth, gap_size = ex.gap_size, x = ex.x, y = ex.y)))
 
 library(tidyr)
 out_tmc_moses_gb_df <- unnest(out_tmc_moses_gb)
