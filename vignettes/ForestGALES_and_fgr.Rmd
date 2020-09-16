@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-#The ForestGALES win risk model and the *fgr* R package
+# The ForestGALES win risk model and the *fgr* R package
 For a thorough scientific description of the model, please refer to Hale et al. (2015) and Hale et al. (2012). The material presented in these vignettes is meant to provide the reader with: a general introduction to the field of forest wind damage risk modelling; the use, limitations, and development of the *fgr* package. Additionally, some clarifications are presented of the approach used in ForestGALES to deal with complex issues such as: the maximum bending moment on forest trees caused by wind gusts; the combined effects of upwind gaps, distance of a tree from the upwind edge, and spacing on the bending moment; and the effect of stem, canopy, and snow weight when applicable on the total bending moment experienced by trees in the wind.
 
 ForestGALES (Hale et al., 2015) is a mostly mechanistic, process-based mathematical model to calculate the risk of wind damage to forested stands.
@@ -91,16 +91,16 @@ Finally, the `Critical Wind Speeds` section summarises the calculations to deriv
 The *roughness* and the *TMC* methods are implemented in the *fgr* R package via two wrapper functions: `fg_rou` and `fg_tmc`, respectively.
 In handling the input variables, both wrappers divide them in three categories: 'Essentials', 'Desirables', and 'Advanced'. The inputs included in these categories differ between the two wrappers as the *roughness* and *TMC* methods operate largely in different ways (see other sections in this vignette - e.g. `Critical Wind Speeds` - for differences between the *roughness* and *TMC* methods). Wind climate inputs (e.g. Weibull A and k parameters of the mean wind speed distribution, or DAMS scores for Great Britain only) are only necessary to calculate the probabilities of damage associated with the critical wind speeds (CWS) of damage (for breakage and overturning). When not available, only the CWS are reported in the outputs (probabilities are reported as NAs).
 
-##Overview: Inputs
+## Overview: Inputs
 - Essentials include those inputs without which the model cannot run, as the most basic information needs to be provided in order to estimate the CWS of damage. Typically, these include tree species, tree height, dbh, and mean spacing. When only these inputs are provided, the accuracy of model predictions is expectedly limited, as the stands/trees are not fully characterised. Stand/tree id are included in the Essentials to facilitate recod-keeping. When one or more essentials are not provided, the simulations will stop and the model will return an error. Date is not classified as an essential input, but it is useful for keeping track of results when calculating wind risk over time, e.g. throughout a rotation.
 - Desirables provide additional information on the stands/trees being simulated. Typically, this category includes mean canopy values (depth and width), soil type, rooting depth, the size of any upwind gaps and the nature ("green" or "brown") of upwind stand edges. When these inputs are provided, all the necessary information for calculating the CWS for stands/trees is available, and the *roughness* and *TMC* methods can be implemented fully with lower prediction errors. When any of these inputs are not available, they are either calculated from species-specific parameters (e.g. for crown dimensions), or are set to a nominal value (e.g. for soil type, rooting depth, and gap size and type). When at least one of the inputs in this category is not provided, the model will issue a warning;
 - Advanced inputs allow users to customise their simulations by changing parameter values (both species-specific and general constants) in their simulations. The default values of these parameters are stored in the *Internal Data* of the *fgr* package. The Advanced inputs include: $f_{knot}$ (a factor to reduce wood strength in presence of knots), MOE, MOR, and density of green wood, and crown density; aerodynamic parameters that describe the streamlining of the canopy (e.g. $C_{drag}$ and $N_{drag}$, see the `Streamlining and Drag` section); crown volume, to override the species-specific calculations in *fgr*; stem volume, to override the taper functions provided with the package (see the `Stem Volume` section); $C_{reg}$ values to characterise tree anchorage, when tree-pulling data are available (for the tree pulling protocol see Nicoll et al., 2006. Users interested in performing their own tree pulling experiments for use in the *fgr* package are encouraged to contact the *fgr* package authors to discuss model requirements); snow depth and density (default values are: snow depth = 0m, and snow density = 150 kg m-3); finally, air density ($\rho$) can be edited for applications in airflow studies.
 For the *TMC* method, the possibility to choose a competition index (either the distance-independent *bal* - normalised by basal area, or the distance-dependent *heg*, based on Hegyi (1974) - see the `Turning coefficients functions` section) belongs to the Advanced input category.
 
-###Further customisation
+### Further customisation
 The `species_parameters` and `fgr_constants` inputs allow the user to furter customise the parametrisation of their simulations. The defaults values of these species-specific parameters and general constants are stored in the *fgr* package Internal Data and as such they remain always accessible to the user. Copies of these data are provided for user customisation in the form of External Data (akin to example datasets) in the form of data frames: the `ud_species_parameters.rda` and the `ud_fgr_constants.rda` files in the package data folder. The user can use these data frames as templates and change values in either or both, or expand the species parameters datasets with additional species, provided that the data.frame structure (column naming especially) is maintained, and additional species are named with a coded starting with the capital letter *U* (these need to be rownames in the data.frame). 
 
-####How to: an example of customising species parameters and general constants  
+#### How to: an example of customising species parameters and general constants  
 Firstly, load the copies of the default values, starting with the species_parameters:
 ```
 load(file = "C:/Program Files/RStudio/fgr/fgr/data/ud_species_parameters.rda")
@@ -185,7 +185,7 @@ load(file = "C:/Program Files/RStudio/fgr/ForestGALES-R scripts/mydata.sp.rda")
 load(file = "C:/Program Files/RStudio/fgr/ForestGALES-R scripts/mydata.fc.rda")
 fg_rou(stand_id = "advanced customisation", date = 2020, species = "U1", mean_ht = 20, mean_dbh = 20, spacing = 2.5,  species_parameters = mydata.sp, fgr_constants = mydata.fc,  full_output = 0)
 ```
-
+## Summarising the Inputs of `fg_rou` and `fg_tmc`:
 The inputs for the `fg_rou` and the `fg_tmc` wrapper functions for the *roughness* and the *TMC* methods are summarised in Table 1, including the variable names for the user-defined species parameters and general constants. The category of the inputs (Essential, Desirable, Advanced) is shown.
 
 Table 1: Input variables for the wrapper functions of the *roughness* and the *TMC* methods. E: Essential input; D: Desirable input; A: Advanced input.
@@ -353,52 +353,77 @@ It should be noted that the outputs of `fg_rou` and `fg_tmc` are given as a list
 
 ## Vectorising the wrapper functions with batch-mode: multiple stands and multiple trees
 "Out of the box", the `fg_rou` and the `fg_tmc` wrapper functions for the *roughness* and the *TMC* methods are only applicable to 1 stand and 1 tree, respectively. 
-For the *roughness* method to work in "batch mode", i.e. to compute numerous forest stands at once, and for the *TMC* method to compute multiple trees populating one or more stands, the `fg_rou` and the `fg_tmc` wrapper functions need to be 'vectorized'. In R, this can be done in multiple ways, e.g. using the functions of the `apply` family. In our experience, we find it quicker to create a new 'vectorized' function using the `Vectorize` function in base R. As an example:
+For the *roughness* method to work in "batch mode", i.e. to compute numerous forest stands at once, and for the *TMC* method to compute multiple trees populating one or more stands, the `fg_rou` and the `fg_tmc` wrapper functions need to be 'vectorized'. In R, this can be done in multiple ways, e.g. using the functions of the `apply` family. In our experience, we find it quicker to create a new 'vectorized' function using the `Vectorize` function in base R. 
+However, care must be exercised when using the wrapper functions with a large amount of customisation, i.e. when using a complete or near-complete set of inputs (to be precise, any length of inputs that includes or exceeds `species_parameters` as shown in the order of the variables in Table 1, or as per the arguments lists of the `fg_rou` and '`fg_tmc` wrapper functions), or when wanting to use customised data frames of species parameters and/or constants used in the model. This is because, if either or both of `species_parameters` and `fgr_constants` were included in the call of the Vctorized function (or expected by `R`, in case the arguments were not being named explicitly in the function call - e.g. *not* as: `mean_ht = mean_ht_input`) without specifying which arguments are to be vetorised, and which ones are not, the Vectorized function would read through the `species_parameters` and `fgr_constants` data frames as if they were vectors, and an error would be returned when e.g. trying to read species-specific parameter values (the error would be of the * incorrect number of dimensions* kind).
+This problem can be obviated by specifying which arguments should *not* be vectorised when creating a Vectorized wrapper function.
+As an example:
 ```
-fg_rou_v <- Vectorize(fg_rou) #The names of the new vectorized functions are of course arbitrary
-fg_tmc_v <- Vectorize(fg_tmc)
+args.to.vectorize <- formalArgs(fg_tmc) # extracts the list of arguments of the function we want to vectorise (fr_tmc in this case)
+args.to.vectorize <- args.to.vectorize[!args.to.vectorize %in% c("species_parameters", "fgr_constants")] #excludes the species_parameters and fgr_constants objects from the list of arguments to vectorize: this means that these 2 objects will remain themselves through each iteration of the vectorised function
+fg_tmc_v <- Vectorize(fg_tmc, vectorize.args = args.to.vectorize) # vectorises the fg_tmc function but specifies which arguments are to be read as vectors, and which ones are not.
 ```
-The inputs of the vectorised function need to be vectors of the same length (shorter vectors would be recycled, this can work with e.g. `full_output`, `species`, etc.).
-Using the example datasets provided in the package, this is trivially achieved as below. Note the use of the `as.character()` function for `species`, `stand_id`, `tree_id`, `predominant_species`, and `ci`, which otherwise would be treated as factors. Also note the `as.Date()` function used for date.
+Note that in cases of complete or near-complete customisation, specifying that the the `species_parameters` and `fgr_constants` data frames (or equivalent, user-defined alternatives of these) are not to be treated as vectors in the execution of Vectorized functions has the added benefit that - provided that essential inputs are included, and the order in which the inputs are called in the Vectorized wrapper function is correct - the only inputs that need to be named explicitly are in fact the `species_parameters` and `fgr_constants` data frames.
+In the example below, the code for a batch simulation with fictitious data (note the use of the "ex." prefix to indicate example data - a convention used throughout the examples in this manual) is shown. Highlighted are the the `species_parameters` and `fgr_constants` data frames which are the only inputs to be named, because all the other inputs are in the correct order as per the arguments list of the `fg_tmc` function (in this case). 
+```
+output.ex <- as.data.frame(t(fg_tmc_v(ex.stand_id, ex.tree_id, ex.date, ex.species, ex.tree_ht, ex.dbh, ex.spacing_current,
+                                       ex.predominant_species, ex.stand_mean_ht, ex.stand_mean_dbh,
+                                       ex.stand_top_ht, ex.full_output, ex.weib_a, ex.weib_k, ex.ci, ex.ci_value, elev_ht = NA,
+                                       ex.cr_width, ex.cr_depth, ex.stand_cr_width, ex.stand_cr_depth,
+                                       ex.soil_group, ex.rooting, ex.dist_edge, ex.gap_size, ex.spacing_before, ex.years_since_thin, 
+                                       
+                                       species_parameters = species_parameters, 
+                                       fgr_constants = fgr_constants,
+                                       
+                                       ex.moe, ex.mor, ex.fknot, ex.stem_vol,
+                                       ex.crown_vol, ex.stem_density, ex.crown_density, ex.c_reg, ex.c_drag, ex.n_drag,
+                                       ex.drag_upper_limit, ex.snow_depth, ex.snow_density,
+                                       ex.ro, ex.x, ex.y, ex.z, ex.dams)))
+```
+The inputs of the vectorised function (other than the `species_parameters` and `fgr_constants` data frames, or customised version of these) need to be vectors of the same length - shorter vectors would be recycled, this can work with e.g. `full_output`, `species`, etc.
+Using the example datasets provided in the package, this is trivially achieved as below. Note the use of the `as.character()` function for `species`, `stand_id`, `tree_id`, `predominant_species`, and `ci`, which otherwise would be treated as factors. 
 
 ### Example datasets: the roughness method
 
-The possibility of fully customising *fgr* inputs provides us with the opportunity of incorporating the effect of increasing values of the Moduli of Rupture (MOR) and of Elasticity (MOE) throughout the rotation. As shown by Moore et al. (2009), the mechanical properties of juvenile and mature wood of Sitka spruce are quite different, with wood becoming stiffer and more resistant to breakage as trees age. 
-With either experimental knowledge of MOE and MOR throughout a rotation (e.g. from sampling thinned trees or applying acoustic tools on the standing stock), or with the use of modelled values, *fgr* users can refine the results of their simulations to incorporate the evolution of the stem's mechanical properties throughout a rotation, as done by Locatelli et al. (2018) in their modelling work with *Acacia* hybrid (*A. mangium X A. auricoliformis*). Following from the example above:
+The possibility of fully customising *fgr* inputs provides us with the opportunity of incorporating the effect of increasing values of the Moduli of Rupture (MOR) and of Elasticity (MOE), and of basic wood density throughout the rotation. As shown by Moore et al. (2009), the mechanical properties of juvenile and mature wood of Sitka spruce are quite different, with wood becoming stiffer and more resistant to breakage as trees age. 
+With either experimental knowledge of MOE, MOR, and green wood density throughout a rotation (e.g. from sampling thinned trees or applying acoustic tools on the standing stock), or with the use of modelled values, *fgr* users can refine the results of their simulations to incorporate the evolution of the stem's mechanical properties throughout a rotation, as done by Locatelli et al. (2018) in their modelling work with *Acacia* hybrid (*A. mangium X A. auricoliformis*). Similarly, the effect of forest management practices (thinnings and exposing the stand to new edges) can be modelled with *fgr*. Following from the example above:
 ```
-ex.stand_id <- as.character(df_rou$stand_id)
-ex.date <- df_rou$date
-ex.species <- as.character(df_rou$species)
-ex.mean_ht <- df_rou$mean_ht
-ex.mean_dbh <- df_rou$mean_dbh
-ex.spacing <- df_rou$spacing
-ex.full_output = 1
-ex.weib_a <- df_rou$weib_a
-ex.weib_k <- df_rou$weib_b
-ex.moe <- df_rou$moe_by_age
-ex.mor <- df_rou$mor_by_age
+args.to.vectorize <- formalArgs(fg_rou)
+args.to.vectorize <- args.to.vectorize[!args.to.vectorize %in% c("species_parameters", "fgr_constants")]
+fg_rou_v <- Vectorize(fg_rou, vectorize.args = args.to.vectorize)
 
-out_rou_mech <- as.data.frame(t(fg_rou_v(ex.stand_id, ex.date, ex.species, ex.mean_ht, ex.mean_dbh, ex.spacing, ex.full_output, ex.weib_a, ex.weib_k, moe = ex.moe, mor = ex.mor)))
+df_rou_mechanical <- read.csv("D:/fr_workstation/fgr/ForestGALES-R scripts/df_rou_mechanical.csv", header = TRUE)
+ex.stand_id <- as.character(df_rou_mechanical$stand_id)
+ex.date <- df_rou_mechanical$date
+ex.species <- as.character(df_rou_mechanical$species)
+ex.mean_ht <- df_rou_mechanical$mean_ht
+ex.mean_dbh <- df_rou_mechanical$mean_dbh
+ex.spacing <- df_rou_mechanical$spacing
+ex.full_output = 1
+ex.weib_a <- df_rou_mechanical$weib_a
+ex.weib_k <- df_rou_mechanical$weib_k
+ex.soil_group <- df_rou_mechanical$soil_group
+ex.rooting <- df_rou_mechanical$rooting
+ex.moe <- df_rou_mechanical$moe
+ex.mor <- df_rou_mechanical$mor
+ex.stem_density <- df_rou_mechanical$stem_density
+ex.new_edge <- df_rou_mechanical$new_edge
+ex.gap_size <- df_rou_mechanical$gap_size
+
+out_rou_mech <- as.data.frame(t(fg_rou_v(ex.stand_id, ex.date, ex.species, ex.mean_ht, ex.mean_dbh, ex.spacing, ex.full_output, ex.weib_a, ex.weib_k, soil_group = ex.soil_group, rooting = ex.rooting, new_edge = ex.new_edge, gap_size = ex.gap_size, moe = ex.moe, mor = ex.mor, stem_density = ex.stem_density)))
 
 library(tidyr)
 out_rou_mech_df <- unnest(out_rou_mech)
 ```
-Note that in the example above only the MOE (`ex.moe`) and MOR (`ex.mor`) are declared with their argument names (`moe` and `mor`), while all the other arguments are not. This is because all the other arguments are in the exact order and position as per the argument list in the `fg_rou` function call, while `moe` and `mor` are not.
- 
-####Plotting CWS through a rotation:
-The CWS throughout a rotation can be visualised by e.g. plotting the calculated CWS for damage (either breakage or uprooting) against stand age. With `ggplot2`, stand age (in this example, `df_rou$stand_age`) needs to be in the same dataframe as the CWS before a graph can be generated. 
-With base R plotting, plotting of CWS *vs* Age is trivial:
-
-```
-#No changes in MOE or MOR:
-plot(df_rou$stand_age ~ out_rou_df$u10_damage, type = "b", main = "CWS of damage throughout a rotation", xlab = "Stand Age (years)", ylab = "CWS (m s-1)")
-#
-#With age-dependent values of MOE and MOR:
-plot(df_rou$stand_age ~ out_rou_mech_df$u10_damage, type = "b", main = "CWS of damage throughout a rotation", sub = "Age-dependent values of MOE & MOR", xlab = "Stand Age (years)", ylab = "CWS (m s-1)")
-```
+Note that in the example above the soil group (`ex.soil_group`), rooting depth (`ex.rooting`), the presence of a new edge (`ex.new_edge`) and the size of the gap (`ex.gap_size`), MOE (`ex.moe`) and MOR (`ex.mor`), and stem density (`stem_density`) are declared with their argument names, while all the other arguments are not. This is because all the other arguments are in the exact order and position as per the argument list in the `fg_rou` function call, while these are not, and there are no other inputs in the function call that come after `stem_density`. This removes the need of naming the the `species_parameters` and `fgr_constants` data frames.
+The `Date` input is used in this example as stand age.
+Note the use of the vectorised TMC function (`fg_rou_v`), the transpose (`t`) and data frame (`as.data.frame`) base R functions, and the `unnest` function of the `tidyr` package to convert the list of outputs of the `fg_rou_v` function to a data.frame object suitable for extracting a CSV file of the results.
 
 ### Example datasets: the TMC method
 ```
+args.to.vectorize <- formalArgs(fg_tmc)
+args.to.vectorize <- args.to.vectorize[!args.to.vectorize %in% c("species_parameters", "fgr_constants")]
+fg_tmc_v <- Vectorize(fg_tmc, vectorize.args = args.to.vectorize)
+
 ex.stand_id <- as.character(df_tmc$stand_id)
 ex.tree_id <- as.character(df_tmc$tree_id)
 ex.date <- df_tmc$date
@@ -443,14 +468,14 @@ ex.x <- df_tmc$x
 ex.y <- df_tmc$y
 ex.z <- df_tmc$z
 ex.dams <- df_tmc$dams 
--id
+
 out_tmc <- as.data.frame(t(fg_tmc_v(stand_id = ex.stand.id, tree_id = ex.tree_id, date = ex.date, species = ex.species, tree_ht = ex.tree_ht, dbh = ex.dbh, spacing_current = ex.spacing_current, predominant_species = ex.predominant_species, stand_mean_ht = ex.stand_mean_ht, stand_mean_dbh = ex.stand_mean_dbh, stand_top_ht = ex.stand_top_ht, full_output = ex.full_output, weib_a = ex.weib_a, weib_k = ex.weib_k, ci = ex.ci, ci_value = ex.ci-value, cr_width = ex.cr_width, cr_depth = ex.cr_depth, stand_cr_width = ex.stand_cr_width, stand_cr_depth = ex.stand_cr_depth, soil_group = ex.soil_group, rooting = ex.rooting, dist_edge = ex.dist_edge, gap_size = ex.gap_size, spacing_before = ex.spacing_before, years_since_thin = ex.years_since_thin, moe = ex.moe, mor = ex.mor, fknot = ex.fknot, stem_vol = ex.stem_vol, crown_vol = ex.crown_vol, stem_density = ex.stem_density, crown_density = ex.crown_density, c_reg = ex.c_reg, c_drag = ex.c_drag, n_drag = ex.n_drag, drag_upper_limit = ex.drag_upper_limit, snow_depth = ex.snow_depth, snow_density = ex.snow_density, ro = ex.ro, x = ex.x, y = ex.y, z = ex.z, dams = ex.dams))) 
                                     
 library(tidyr)
 out_tmc_df <- unnest(out_tmc)
 
-#Note the use of the vectorised TMC function ("fg_tmc_v""), the transpose ("t") and data frame ("as.data.frame") base R functions, and the "unnest" function of the tidyr package to convert the list outputs of the fg_tmc function to a data.frame object suitable for extracting a CSV file.
-Also note how all the variable names are stated out to make sure no unwanted misplacement of variables occurs.
+#Note the use of the vectorised TMC function ("fg_tmc_v"), the transpose ("t") and data frame ("as.data.frame") base R functions, and the "unnest" function of the `tidyr` package to convert the list outputs of the fg_tmc function to a data.frame object suitable for extracting a CSV file of the results.
+Also note how all the variable names are stated out to make sure no unwanted misplacement of variables occurs. This is a much more verbose approach than matching the order of the inputs in the function call with the order of the arguments of the function and naming the species_parameters and fgr_constants data.frames explicitly.
 ```
 One can apply a similar procedure with the *roughness* method (e.g. using the `df_rou` dataset). 
 
@@ -458,6 +483,10 @@ It should be noted that inputs need to be provided solely for the Essential vari
 
 Using the `df_tmc_2` dataset as an example, one should be mindful that it is required to use the `as.character()` function for `species`, `stand_id`, `tree_id`, `predominant_species`, which  would otherwise be treated as factors. Note that if Competition Indices were used, `ci` would also need to be treated as a character type.
 ```
+args.to.vectorize <- formalArgs(fg_tmc)
+args.to.vectorize <- args.to.vectorize[!args.to.vectorize %in% c("species_parameters", "fgr_constants")]
+fg_tmc_v <- Vectorize(fg_tmc, vectorize.args = args.to.vectorize)
+
 ex.stand_id <- as.character(df_tmc_2$stand_id)
 ex.tree_id <- as.character(df_tmc_2$tree_id)
 ex.date <- df_tmc_2$date
@@ -475,18 +504,22 @@ out_tmc_2 <- as.data.frame(t(fg_tmc_v(ex.stand_id, ex.tree_id, ex.date, ex.speci
 
 library(tidyr)
 out_tmc_2_df <- unnest(out_tmc_2)
+
+#Note that in the function call of this example there is no need of naming the inputs in the call, including the species_parameters and fgr_constants data.frames, because all the inputs are in the correct order as per the function's arguments list, and none of the inputs of this example come after `species_parameters` in the arguments list.
 ```
 
-###Calculating risk throughout a rotation: an example with the TMC method
+### Calculating risk throughout a rotation: an example with the TMC method
 A typical application of ForestGALES is in forecasting the risk to a stand throughout a rotation. The `df_tmc_moses_gb` example dataset contains tree-level growth data modelled with the MOSES-GB growth model (https://www.forestresearch.gov.uk/research/modelling-mixed-age-and-mixed-species-stands/) for two experimental sites in the UK (named 'Clocaenog' and 'Kielder'). The sites in the `df_tmc_moses_gb` example dataset are composed of only Sitka spruce (*Picea sitchensis (Bong.) Carr.*) trees, for 200 years at time intervals of 5 years. No thinnings are performed on the stands and the reductions in stocking densities are due to mortality alone. 
 
 The first step is again to vectorise the `fg_tmc` function:
 ```
-fg_tmc_v <- Vectorize(fg_tmc)
+args.to.vectorize <- formalArgs(fg_tmc)
+args.to.vectorize <- args.to.vectorize[!args.to.vectorize %in% c("species_parameters", "fgr_constants")]
+fg_tmc_v <- Vectorize(fg_tmc, vectorize.args = args.to.vectorize)
 ```
 Secondly, the `df_tmc_moses_gb` dataset is split in its component variables. The stand is in a location with a wind climate described by the Weibull parameters in the dataset. Note that in the dataset, columns are assigned to `weib_a` and `weib_k`. The values of these variables in the dataset remain constant throughout the rotation. In reality, they are likely to change due to e.g. changes in the roughness of the surrounding area (e.g. due to changes in land-use such as harvesting of a neighbouring stand), and climate change (current projections of the future wind climate (e.g.) indicate an increase of the likelihood of extreme events (the *k* parameter of the Weibull distribution), but possibly no changes in the mean wind speed (the *A* parameter)).
 
-For the purposes of this example, we are only concerned with the short output, so we can set `full_output` to 0 (i.e. "short" output). As for the previous *TMC* examples above, we want to treat `species` and `stand_id` as character type, not as factors. Note that information on individual and stand-level crown depth is available and therefore fed to the model. Tree positions are provided so they are included to allow the output to be applied eventually in a GIS project to map wind damge risk.
+For the purposes of this example, we are only concerned with the short output, so we can set `full_output` to 0 (i.e. "short" output). As for the previous *TMC* examples above, we want to treat `species` and `stand_id` as character type, not as factors. Note that information on individual and stand-level crown depth is available and therefore fed to the model. Tree positions are provided so they are included to allow the output to be applied eventually in a GIS project to map wind damge risk. Note that this is a very large dataset and it will take some time (~1 minute) for the outpus to compute
 
 ```
 ex.stand_id <- as.character(df_tmc_moses_gb$stand)
@@ -505,19 +538,18 @@ ex.gap_size <- 0
 ex.x <- df_tmc_moses_gb$x
 ex.y <- df_tmc_moses_gb$y
 ex.full_output <- 0
-ex.weib_a <- df_tmc_moses_gb$weib_a
-ex.weib_k <- df_tmc_moses_gb$weib_b
 
-out_tmc_moses_gb <- as.data.frame(t(fg_tmc_v(stand_id = ex.stand_id, tree_id = ex.tree_id, date = ex.date, species = ex.species, tree_ht = ex.tree_ht, dbh = ex.dbh, spacing_current = ex.spacing_current, predominant_species = ex.species, stand_mean_ht = ex.stand_mean_ht, stand_mean_dbh = ex.stand_mean_dbh, stand_top_ht = ex.stand_top_ht, full_output = ex.full_output, weib_a = ex.weib_a, weib_k = ex.weib_k, cr_depth = ex.cr_depth, stand_cr_depth = ex.stand_cr_depth, gap_size = ex.gap_size, x = ex.x, y = ex.y)))
+out_tmc_moses_gb <- as.data.frame(t(fg_tmc_v(stand_id = ex.stand_id, tree_id = ex.tree_id, date = ex.date, species = ex.species, tree_ht = ex.tree_ht, dbh = ex.dbh, spacing_current = ex.spacing_current, stand_mean_ht = ex.stand_mean_ht, stand_mean_dbh = ex.stand_mean_dbh, stand_top_ht = ex.stand_top_ht, full_output = ex.full_output, cr_depth = ex.cr_depth, stand_cr_depth = ex.stand_cr_depth, gap_size = ex.gap_size, x = ex.x, y = ex.y)))
 
 library(tidyr)
 out_tmc_moses_gb_df <- unnest(out_tmc_moses_gb)
 
 #Note again the use of the vectorised function ("fg_tmc_v""), of the transpose ("t") and data frame ("as.data.frame") base R functions, and the tidyr unnest function to convert the list outputs of the fg_rou function to a data.frame object suitable for extracting a CSV file.
+Also, note how all the inputs are named to ensure that no errors occur due to input misplacement, because the variables available in this example do not correspond to the correct order in the function's argument list.
 ```
 
 
-#Tree Dimensions
+# Tree Dimensions
 
 Both the '*roughness*'and the *TMC* methods require that some tree dimensions are known (i.e. provided by the user) or calculated within the model's workflow.
 
@@ -539,7 +571,7 @@ In the TMC method, when not supplied by the user, the canopy width and depth of 
 The masses of the stem, of the overarching canopy, and of snow (when present), contribute to the additional turning moment captured by the `Deflection Loading Factor`. Some of these calculations are performed at tree base (e.g. the Second area moment of Inertia) which require that stem diameter at tree base is calculated from Dbh.
 
 
-#Stem volume
+# Stem volume
 Estimating the mass of the stem is required in ForestGALES to calculate the resistance to overturning (in the `critical_moment_overturning` function) and the additional moment provided by the stem mass as the tree deviates from its vertical position under the force of the wind and that of its own weight and of snow when applicable, as calculated in the `DLF_calc` function. 
 Stem mass is calculated by simply multiplying the volume of the stem by the species-specific green wood density stored in the package *Internal Data*.
 
@@ -575,7 +607,7 @@ Apart from the latter method, which is only applied to Japanese Larch grown in J
 |Eucalyptus globulus |             |             |                             |
 
 
-#Critical Resistive Moments
+# Critical Resistive Moments
 
 ForestGALES calculates the critical wind speeds of damage (for stem breakage and tree uprooting) by comparing them with the respective critical resistive moments. The critical breaking moment is calculated from engineering principles, while the critical overturning moment is derived from experimental data.
 
@@ -641,7 +673,7 @@ The soil classification adopted in ForestGALES is based on UK soil classificatio
 |Man-made soils                   |                         |                       |                                  |
 
 
-#Streamlining and Canopy drag
+# Streamlining and Canopy drag
 To calculate the wind loading on a tree, ForestGALES adopts an empirical approach derived from Mayhead et al. (1975). With this method, the measured drag of trees defines the relationship between the drag of the air on a surface and the aerodynamic roughness of the surface (e.g. forest canopy).
 
 ## Drag over canopies
@@ -679,7 +711,7 @@ which is a simplification of the logarithmic profile in Eq.1 at the beginning of
 ## Zero-plane displacement
 As described by Thom (1971), $d$ is the height of the roughness elements where absorption of momentum is assumed to take place (aka the height of a "centre of pressure"). This assumption is based on the idea that the distribution of the shearing stress $\tau$ over the roughness elements is aerodynamically equivalent to the entire shear stress being applied at a height $d$. The zero-plane displacement is calculated in *fgr* R with the `zpd_fun` function which makes use of the simplified formula in Raupach (1994) that is applicable to roughness elements of very different vertical distribution of width (e.g. crown breadth as described above).
 
-#Bending Moment in the *roughness* method
+# Bending Moment in the *roughness* method
 The roughness method in ForestGALES is based on the the drag per unit area imposed on the canopy surface by the wind. The wind's shear stress ($\tau$ (N m-2) on the canopy surface is calculated as:
 
 $\tau = - \rho u_{*}^2\tag{Eq.12}$
@@ -718,7 +750,7 @@ $M_{appl\_max}(tree\_base) = d\rho G\cdot u_*^2D^2\tag{Eq.17}$
 
 Eq.12 employs $u_*$ rather than $u_h$ as used in Eq.9 to 11. This makes the computation of $M_{appl\_max}$ much more straightforward than for Eq. 16. Converting $u_*$ to $u_h$ is then possible by employing $\gamma$, "*the frontal area of the roughness elements, from the mean wind direction, per unit ground area*" (Raupach, 1994), with the use of the `gammasolved_fun` function (see the `Streamlining and Drag` section). This approach is used in the *fgr* R package to calculate the critical wind speeds for breakage and overturning.
 
-#The TMC method: Turning Coefficients
+# The TMC method: Turning Coefficients
 While the *roughness* method of ForestGALES is designed to work in mono-specific even-aged stands (where all trees are very similar to the mean tree used for the calculations), the method of calculating the critical wind speeds (CWS) of damage for individual trees that is implemented in *fgr* is called Turning Moment Coefficient (*TMC*, Hale et al., 2012). The *TMC* method allows calculating the wind loading on trees of different sizes and species within a mixed stand. Hale et al. (2012) and Wellpott (2008) used data from stands that had not been recently thinned to define the turning moment coefficient $T_C$ which directly relates the mean wind speed at canopy top with the resulting maximum applied turning moment at tree base (Eq.18):
 
 \begin{align}
@@ -789,7 +821,7 @@ When *TMC_Ratio* is higher than 1, the wind loading on the retained trees is hig
 
 The *TMC_Ratio* is assumed to linearly tend towards the acclimated stand value (i.e. 1) following thinning. There are suggestions in the literature that stands thinned for less that 5 years have a higher probability of wind damage (Persson, 1975; Valinger and Friedman, 2011). For this, we assume that a stand has acclimated to the post-thinning conditions after 5 years (i.e. the *TMC_Ratio* value has returned to 1), altough the exact rate of re-acclimation is  a topic deserving of further in-depth study (Ruel et al., 2003).
 
-#Deflection Loading Factor
+# Deflection Loading Factor
 The deflection loading factor (DLF) represents the contribution to the total loading afforded by the overhanging mass of stem and crown (and snow, when present).  Deflection is calculated as a function of distance along the stem from the top of the tree.
 
 $DLF = \frac{total \,moment \,from \,wind \,and \,overhanging \,stem \,and \,crown}{moment \,from \,wind \,alone}\tag{Eq.25}$
@@ -812,7 +844,7 @@ The `deflection_fun` function is used to calculate tree deflection on the horizo
 ## DLF
 Finally, the `DLF_calc` function calculates the 'Deflection Loading Factor', i.e. it converts the applied moment to the critical moment by including the additional moments provided by the effects of the weight of the stem, crown, and snow The analytical solution is obtained with a Maclaurin series. More information on the use of DLF can be found in the `Bending Moment Roughness` and the `Critical Wind Speeds` sections. Note that in some cases (about one third of instances) the Maclaurin series struggle to converge. In these cases, the default value of 1.136 derived by Hale et al. (2015) is used.
 
-#Edge, gap, and gust effects
+# Edge, gap, and gust effects
 Understanding the effects of stand edge, upwind gap size, and gustiness is one of the most complex aspects of ForestGALES^[Throughout the package documentation, we will use the name *ForestGALES* to refer to the model characteristics as described in e.g. Hale et al. (2015) or Gardiner et al. (2000, 2008). Conversely, when we refer to the functionalities implemented in this package, we use the name *fgr*]. In this vignette, we attempt to illustrate these concepts in an understandable manner.
 
 Regardless of which method (*roughness* vs *TMC*) is applied, initial calculations of the relationship between elevated wind speed and bending moment are always performed as if the tree were located 9 times tree height inside the forest. Corrections are then introduced into the calculations to incorporate the effects of Edge type ("green", i.e. acclimated, or "brown", i.e. recently exposed - effectively simulating trees at the windward edge of a forest stand), of Gap size, and of gustiness (for the *roughness* method).
@@ -871,7 +903,7 @@ Gap Factor = [(a+b_{gap.size}^{\,c})/d- a/d] / [(a+b_{(10\cdot h)}^{\,c})/d - a/
 \end{align}
 
 
-#Critical Wind Speeds
+# Critical Wind Speeds
 The Critical Wind Speeds (CWS) of damage (for stem breakage and for tree uprooting, or overturning) are the final output of the GALES model (Gardiner et al., 2000). Their detailed formulas depend on the method used for the calculation of  CWS: the *roughness* method for whole stands, and the *TMC*  method for individual trees within a stand.
 
 The approach to defining the CWS is similar for the two methods, and it is based on equating the total maximum turning moment ($M_{tot\_max}$, derived from the *roughness* and *TMC* formulas for the maximum applied turning moment ($M_{appl\_max}$)) with those for the critical breaking and overturning moments (Eq. 4 and 5, respectively, in the `Critical Resistive Moments` section).
@@ -959,8 +991,11 @@ When information on the local wind climate is available, the risk of wind damage
 
 
 
-##A word about the package licence and its terms of use
-As reported in the package's DESCRIPTION, we would like to draw attention to the licence applied to the *fgr* package, especially to its restriction to non-commercial use. The *fgr* package is released under Creative Commons' Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0) (see https://creativecommons.org/licenses/by-nc-nd/4.0/ for further information). We encourage the use of the *fgr* package for academic and research work, and we welcome collaborative work that can make use of the package and the Tree Stability research team at Forest Research. Please feel free to contact any of the authors to discuss research and commercial collaboration/consultancy.
+# A word about the package licence and its terms of use
+As reported in the package's DESCRIPTION, we would like to draw attention to the licence applied to the *fgr* package, especially to its restriction to non-commercial use. The *fgr* package is released under GNU General Public License, version 3 (GPLv3) (see https://www.gnu.org/licenses/gpl-3.0.en.html for further information). 
+However, an additional Licence file is included with every release of this package to set the limits the use of *fgr* to non-commercial applications. Please familiarise yourself with the Licence file and feel free to contact Forest Research for any clarification that might be required.
+We encourage the use of the *fgr* package for academic and research work, and we welcome collaborative work that can make use of the package and involve the Tree Stability research team at Forest Research. Please feel free to contact any of the authors to discuss research and commercial collaboration/consultancy projects.
+
 
 
 

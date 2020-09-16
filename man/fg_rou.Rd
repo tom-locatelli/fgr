@@ -4,16 +4,45 @@
 \alias{fg_rou}
 \title{ForestGALES - Roughness method.}
 \usage{
-fg_rou(stand_id, date = NA, species, mean_ht, mean_dbh, spacing,
-  full_output = 1, weib_a = NA, weib_k = NA, top_ht = NA,
-  elev_ht = NA, mean_cr_width = NA, mean_cr_depth = NA,
-  soil_group = NA, rooting = NA, new_edge = NA, gap_size = NA,
+fg_rou(
+  stand_id,
+  date = NA,
+  species,
+  mean_ht,
+  mean_dbh,
+  spacing,
+  full_output = 1,
+  weib_a = NA,
+  weib_k = NA,
+  top_ht = NA,
+  elev_ht = NA,
+  mean_cr_width = NA,
+  mean_cr_depth = NA,
+  soil_group = NA,
+  rooting = NA,
+  new_edge = NA,
+  gap_size = NA,
   species_parameters = fgr:::species_parameters,
-  fgr_constants = fgr:::fgr_constants, moe = NA, mor = NA,
-  fknot = NA, stem_vol = NA, crown_vol = NA, stem_density = NA,
-  crown_density = NA, c_reg = NA, c_drag = NA, n_drag = NA,
-  drag_upper_limit = NA, snow_depth = NA, snow_density = NA,
-  ro = NA, x = NA, y = NA, z = NA, dams = NA)
+  fgr_constants = fgr:::fgr_constants,
+  moe = NA,
+  mor = NA,
+  fknot = NA,
+  stem_vol = NA,
+  crown_vol = NA,
+  stem_density = NA,
+  crown_density = NA,
+  c_reg = NA,
+  c_drag = NA,
+  n_drag = NA,
+  drag_upper_limit = NA,
+  snow_depth = NA,
+  snow_density = NA,
+  ro = NA,
+  x = NA,
+  y = NA,
+  z = NA,
+  dams = NA
+)
 }
 \arguments{
 \item{stand_id}{Stand identifier. Essential.}

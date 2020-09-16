@@ -9,11 +9,32 @@
 \alias{i_fun}
 \title{Deflection Loading Factor Functions}
 \usage{
-dlf_fun(bm, ht, cr_depth, cr_width, stem_vol, dbh, moe, crown_density,
-  stem_density, snow_depth, snow_density, fgr_constants)
+dlf_fun(
+  bm,
+  ht,
+  cr_depth,
+  cr_width,
+  stem_vol,
+  dbh,
+  moe,
+  crown_density,
+  stem_density,
+  snow_depth,
+  snow_density,
+  fgr_constants
+)
 
-deflection_fun(x, lever_arm, fow, dbh, ht, cr_depth, pull_height, moe,
-  fgr_constants)
+deflection_fun(
+  x,
+  lever_arm,
+  fow,
+  dbh,
+  ht,
+  cr_depth,
+  pull_height,
+  moe,
+  fgr_constants
+)
 
 force_of_wind_fun(bm, ht, cr_depth)
 
@@ -51,8 +72,6 @@ i_fun(dbh, ht, cr_depth)
 \item{fow}{Applied wind loading in the \code{deflection_fun} function. It is a placeholder for the output of the \code{force_of_wind_fun} function.}
 
 \item{pull_height}{Height along the tree stem where the wind loading is applied (m).}
-
-\item{stem_density}{Density of green wood of the stem (kg m-3).}
 }
 \description{
 Calculate the Deflection Loading Factor to account for the additional moment provided by the weight of the stem, crown (and snow, when present)

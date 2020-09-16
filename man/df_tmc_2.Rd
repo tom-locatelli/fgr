@@ -4,7 +4,9 @@
 \name{df_tmc_2}
 \alias{df_tmc_2}
 \title{Example "short" input dataset for the \code{fg_tmc} function}
-\format{A data frame with 8 rows and 42 variables}
+\format{
+A data frame with 8 rows and 42 variables
+}
 \usage{
 data(df_tmc_2)
 }

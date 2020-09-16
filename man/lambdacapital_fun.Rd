@@ -4,8 +4,15 @@
 \alias{lambdacapital_fun}
 \title{Lambda Capital Function.}
 \usage{
-lambdacapital_fun(cr_width, cr_depth, spacing, uguess, n_drag, c_drag,
-  drag_upper_limit)
+lambdacapital_fun(
+  cr_width,
+  cr_depth,
+  spacing,
+  uguess,
+  n_drag,
+  c_drag,
+  drag_upper_limit
+)
 }
 \arguments{
 \item{cr_width}{Width of the canopy in windless conditions (m).}

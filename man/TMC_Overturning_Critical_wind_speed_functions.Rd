@@ -6,16 +6,56 @@
 \alias{uh_overturning_tmc_tmr_simple}
 \title{Critical wind speed for overturning - Single-tree method.}
 \usage{
-uh_overturning_tmc(tree_ht, dbh, cr_depth, cr_width, spacing_current,
-  spacing_before, years_since_thin, dist_edge, gap_size, moe, c_reg,
-  stem_vol, stem_density, crown_density, snow_depth, snow_density, ci,
-  ci_value, n_drag, c_drag, drag_upper_limit, equivalent_mean_ht,
-  stand_cr_depth, stand_cr_width, fgr_constants)
+uh_overturning_tmc(
+  tree_ht,
+  dbh,
+  cr_depth,
+  cr_width,
+  spacing_current,
+  spacing_before,
+  years_since_thin,
+  dist_edge,
+  gap_size,
+  moe,
+  c_reg,
+  stem_vol,
+  stem_density,
+  crown_density,
+  snow_depth,
+  snow_density,
+  ci,
+  ci_value,
+  n_drag,
+  c_drag,
+  drag_upper_limit,
+  equivalent_mean_ht,
+  stand_cr_depth,
+  stand_cr_width,
+  fgr_constants
+)
 
-uh_overturning_tmc_tmr_simple(tree_ht, dbh, cr_depth, cr_width,
-  spacing_current, spacing_before, years_since_thin, dist_edge, gap_size,
-  equivalent_mean_ht, moe, c_reg, stem_vol, stem_density, crown_density,
-  snow_depth, snow_density, ci, ci_value, fgr_constants)
+uh_overturning_tmc_tmr_simple(
+  tree_ht,
+  dbh,
+  cr_depth,
+  cr_width,
+  spacing_current,
+  spacing_before,
+  years_since_thin,
+  dist_edge,
+  gap_size,
+  equivalent_mean_ht,
+  moe,
+  c_reg,
+  stem_vol,
+  stem_density,
+  crown_density,
+  snow_depth,
+  snow_density,
+  ci,
+  ci_value,
+  fgr_constants
+)
 }
 \arguments{
 \item{tree_ht}{Individual tee height (m).}
@@ -38,7 +78,7 @@ uh_overturning_tmc_tmr_simple(tree_ht, dbh, cr_depth, cr_width,
 
 \item{moe}{Modulus of Elasticity of green wood (MPa).}
 
-\item{c_reg}{Regression coefficient of uprooting moment against stem weight (N m kg-1).}
+\item{c_reg}{Regression coefficients of uprooting moment against stem weight (N m kg-1).}
 
 \item{stem_vol}{Individual tree stem volume (m3).}
 
@@ -67,8 +107,6 @@ uh_overturning_tmc_tmr_simple(tree_ht, dbh, cr_depth, cr_width,
 \item{stand_cr_width}{Width of the crown of the "equivalent mean tree" in the stand (m).}
 
 \item{stand_mean_ht}{Arithmetic mean height of the trees in the stand (m).}
-
-\item{c_reg}{Regression coefficients of uprooting moment against stem weight (N m kg-1).}
 }
 \value{
 A list including: The critical wind speed (m s-1) for overturning at canopy top height for the single-tree method;

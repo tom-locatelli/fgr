@@ -4,8 +4,17 @@
 \alias{zpd_fun}
 \title{Zero Plane Displacement Function.}
 \usage{
-zpd_fun(cr_width, cr_depth, spacing, uguess, n_drag, c_drag,
-  drag_upper_limit, ht, fgr_constants)
+zpd_fun(
+  cr_width,
+  cr_depth,
+  spacing,
+  uguess,
+  n_drag,
+  c_drag,
+  drag_upper_limit,
+  ht,
+  fgr_constants
+)
 }
 \arguments{
 \item{cr_width}{Width of the canopy in windless conditions (m).}

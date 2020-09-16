@@ -4,8 +4,16 @@
 \alias{gammasolved_fun}
 \title{Gamma Solved Function.}
 \usage{
-gammasolved_fun(cr_width, cr_depth, spacing, uguess, n_drag, c_drag,
-  drag_upper_limit, fgr_constants)
+gammasolved_fun(
+  cr_width,
+  cr_depth,
+  spacing,
+  uguess,
+  n_drag,
+  c_drag,
+  drag_upper_limit,
+  fgr_constants
+)
 }
 \arguments{
 \item{cr_width}{Width of the canopy in windless conditions (m).}

@@ -12,12 +12,34 @@ tm_ratio_simple(spacing_before, spacing_current, years_since_thin)
 
 tm_ratio_simple_ci(spacing_before, spacing_current, years_since_thin, ci)
 
-tm_ratio(spacing_before, spacing_current, years_since_thin, cr_width,
-  cr_depth, uguess, n_drag, c_drag, drag_upper_limit, ht, fgr_constants)
+tm_ratio(
+  spacing_before,
+  spacing_current,
+  years_since_thin,
+  cr_width,
+  cr_depth,
+  uguess,
+  n_drag,
+  c_drag,
+  drag_upper_limit,
+  ht,
+  fgr_constants
+)
 
-tm_ratio_ci(spacing_before, spacing_current, years_since_thin, cr_width,
-  cr_depth, uguess, n_drag, c_drag, drag_upper_limit, ht, ci,
-  fgr_constants)
+tm_ratio_ci(
+  spacing_before,
+  spacing_current,
+  years_since_thin,
+  cr_width,
+  cr_depth,
+  uguess,
+  n_drag,
+  c_drag,
+  drag_upper_limit,
+  ht,
+  ci,
+  fgr_constants
+)
 }
 \arguments{
 \item{spacing_before}{Mean spacing of trees in the stand before any thinning (m).}

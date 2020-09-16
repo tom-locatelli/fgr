@@ -4,8 +4,21 @@
 \alias{bending_moment_rou}
 \title{Bending moment on a tree under wind loading}
 \usage{
-bending_moment_rou(dbh, ht, cr_width, cr_depth, spacing, dist_edge,
-  gap_size, uguess, n_drag, c_drag, drag_upper_limit, ro, fgr_constants)
+bending_moment_rou(
+  dbh,
+  ht,
+  cr_width,
+  cr_depth,
+  spacing,
+  dist_edge,
+  gap_size,
+  uguess,
+  n_drag,
+  c_drag,
+  drag_upper_limit,
+  ro,
+  fgr_constants
+)
 }
 \arguments{
 \item{dbh}{Arithmetic average of the diameter of the stem at breast height, i.e. 1.3m above the ground, for all trees in the stand (cm).}
