@@ -1,7 +1,7 @@
 Package: fgr
 Type: Package
 Title: R Version of the ForestGALES wind risk model
-Version: 0.0.0.9009.1
+Version: 0.0.0.9009.1.2
 Date: 2020-01-10
 Authors@R: c(person("Tom", "Locatelli", role = c("cre", "aut"),
                      email = "tom.locatelli@forestresearch.gov.uk"),

@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-# The ForestGALES win risk model and the *fgr* R package
+# The ForestGALES wind risk model and the *fgr* R package
 For a thorough scientific description of the model, please refer to Hale et al. (2015) and Hale et al. (2012). The material presented in these vignettes is meant to provide the reader with: a general introduction to the field of forest wind damage risk modelling; the use, limitations, and development of the *fgr* package. Additionally, some clarifications are presented of the approach used in ForestGALES to deal with complex issues such as: the maximum bending moment on forest trees caused by wind gusts; the combined effects of upwind gaps, distance of a tree from the upwind edge, and spacing on the bending moment; and the effect of stem, canopy, and snow weight when applicable on the total bending moment experienced by trees in the wind.
 
 ForestGALES (Hale et al., 2015) is a mostly mechanistic, process-based mathematical model to calculate the risk of wind damage to forested stands.
